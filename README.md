@@ -2,6 +2,10 @@
 
 **EcoPlate** is a B2B Dynamic Pricing SaaS + consumer broadcast tool built for a 2-hour hackathon MVP. It allows restaurants, cafes, and hotels to easily calculate optimal clearance prices for surplus food items before closing, generate AI-optimized broadcast marketing copy, and stream deals to a public consumer live feed.
 
+### 🔗 Live Demo
+- **Consumer Live Feed:** [codex-tau-orcin.vercel.app](https://codex-tau-orcin.vercel.app/)
+- **Vendor Portal:** [codex-tau-orcin.vercel.app/vendor](https://codex-tau-orcin.vercel.app/vendor)
+
 ---
 
 ## 🚀 Key Features
