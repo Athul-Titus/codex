@@ -1,161 +1,202 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EcoPlate Live — Thiruvananthapuram</title>
-  <meta name="description" content="EcoPlate Live Feed — Discover surplus food deals near you in Thiruvananthapuram. Save money, reduce waste." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
-    body { background: #060e14; min-height: 100vh; color: #fff; }
-
-    .glass { background: rgba(16,185,129,.06); backdrop-filter: blur(14px); border: 1px solid rgba(16,185,129,.18); }
-    .glass-card { background: rgba(255,255,255,.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.08); }
-
-    /* Deal card */
-    .deal-card {
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 1.25rem;
-      padding: 1.25rem;
-      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EcoPlate Live — Consumer Feed</title>
+<meta name="description" content="EcoPlate Live Feed — Discover surplus food deals near you in Thiruvananthapuram. Save money, reduce waste." />
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-secondary-fixed": "#410000",
+          "primary-fixed": "#beedd7",
+          "surface-tint": "#3b6756",
+          "on-secondary-fixed-variant": "#930002",
+          "on-tertiary-fixed-variant": "#214f41",
+          "surface-variant": "#e1e3e3",
+          "surface-dim": "#d9dada",
+          "error-container": "#ffdad6",
+          "on-secondary-container": "#fffbff",
+          "primary-fixed-dim": "#a2d1bb",
+          "on-primary": "#ffffff",
+          "on-surface": "#191c1c",
+          "on-tertiary-fixed": "#002118",
+          "surface-container-high": "#e7e8e8",
+          "inverse-primary": "#a2d1bb",
+          "on-background": "#191c1c",
+          "on-tertiary-container": "#7aa897",
+          "on-primary-fixed-variant": "#234f3f",
+          "on-error-container": "#93000a",
+          "on-secondary": "#ffffff",
+          "on-tertiary": "#ffffff",
+          "outline": "#717974",
+          "secondary-container": "#dc3225",
+          "tertiary": "#00261c",
+          "primary-container": "#0f3d2e",
+          "surface-container-low": "#f3f4f4",
+          "tertiary-fixed": "#bcedda",
+          "tertiary-fixed-dim": "#a1d1bf",
+          "primary": "#00261a",
+          "error": "#ba1a1a",
+          "on-error": "#ffffff",
+          "on-surface-variant": "#414944",
+          "inverse-surface": "#2e3131",
+          "on-primary-fixed": "#002116",
+          "surface-container-highest": "#e1e3e3",
+          "outline-variant": "#c0c8c3",
+          "surface": "#f8f9f9",
+          "surface-container-lowest": "#ffffff",
+          "secondary-fixed": "#ffdad5",
+          "surface-bright": "#f8f9f9",
+          "background": "#f8f9f9",
+          "secondary": "#b8130e",
+          "inverse-on-surface": "#f0f1f1",
+          "secondary-fixed-dim": "#ffb4a9",
+          "on-primary-container": "#7ba894",
+          "surface-container": "#edeeee",
+          "tertiary-container": "#0c3d30"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "stack-gap-sm": "8px",
+          "stack-gap-lg": "32px",
+          "container-padding": "24px",
+          "gutter": "16px",
+          "stack-gap-md": "16px",
+          "sidebar-width": "260px",
+          "unit": "4px"
+        },
+        "fontFamily": {
+          "label-sm": ["Geist"],
+          "display-metrics": ["Geist"],
+          "headline-md": ["Geist"],
+          "headline-lg-mobile": ["Geist"],
+          "body-md": ["Geist"],
+          "headline-lg": ["Geist"],
+          "body-lg": ["Geist"],
+          "label-mono": ["Space Mono"]
+        },
+        "fontSize": {
+          "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+          "display-metrics": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+          "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+          "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+          "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+          "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+          "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+          "label-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+        }
+      },
+    },
+  }
+</script>
+<style>
+    body { background-color: #0f172a; color: #f8fafc; }
+    .pulse-dot { animation: pulse 2s infinite; }
+    @keyframes pulse {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
     }
-    .deal-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(16,185,129,.35);
-      box-shadow: 0 16px 40px rgba(16,185,129,.12);
-    }
-    .deal-card.expired {
-      opacity: .4;
-      filter: grayscale(.6);
-    }
-    .deal-card.expired:hover { transform: none; border-color: rgba(255,255,255,.08); box-shadow: none; }
-
-    /* Live pulse */
-    .live-dot {
-      width:10px; height:10px; border-radius:50%; background:#ef4444;
-      animation: livering 1.5s infinite;
-    }
-    @keyframes livering {
-      0%   { box-shadow: 0 0 0 0 rgba(239,68,68,.6); }
-      70%  { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
-      100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
-    }
-
-    /* Filter chips */
-    .chip {
-      padding: .375rem 1rem; border-radius: 99px; font-size: .8125rem; font-weight: 500;
-      border: 1px solid rgba(255,255,255,.1); color: rgba(255,255,255,.4);
-      cursor: pointer; transition: all .2s; background: transparent;
-    }
-    .chip:hover, .chip.active {
-      border-color: rgba(16,185,129,.5); color: #10b981;
-      background: rgba(16,185,129,.08);
-    }
-
-    /* OFF badge */
-    .off-badge {
-      background: linear-gradient(135deg,#f59e0b,#ef4444);
-      font-size: .75rem; font-weight: 700; color: #fff;
-      padding: .25rem .625rem; border-radius: 99px;
-      display: inline-block; white-space: nowrap;
-    }
-
-    /* Claim button */
-    .claim-btn {
-      background: linear-gradient(135deg,#10b981,#059669);
-      color: #fff; font-weight: 600; font-size: .8125rem;
-      border-radius: .75rem; padding: .625rem 1rem;
-      border: none; cursor: pointer; width: 100%;
-      transition: all .2s;
-    }
-    .claim-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16,185,129,.35); }
-    .claim-btn:disabled { background: rgba(255,255,255,.08); transform: none; box-shadow: none; cursor: not-allowed; color: rgba(255,255,255,.35); }
-
-    /* Countdown */
-    .countdown { font-size: .75rem; font-weight: 500; color: rgba(255,255,255,.5); }
-    .countdown.urgent { color: #ef4444; animation: blink 1s step-start infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
-
-    /* Modal */
-    #claim-modal { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,.75); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem; }
+    .pulse-text { animation: pulse-text 2s infinite; }
+    @keyframes pulse-text { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .countdown.urgent { animation: pulse-text 1s step-start infinite; color: #ef4444; }
+    #claim-modal { display: none; }
     #claim-modal.open { display: flex; }
-    .modal-box {
-      background: #0a1929; border: 1px solid rgba(16,185,129,.35);
-      border-radius: 1.5rem; padding: 2.5rem; max-width: 360px; width: 100%; text-align: center;
-    }
-
-    .pickup-code {
-      font-family: 'Courier New', monospace;
-      font-size: 2.5rem; font-weight: 700; color: #10b981;
-      letter-spacing: .4em;
-    }
-  </style>
+</style>
+<style>body { min-height: max(884px, 100dvh); }</style>
 </head>
-<body>
+<body class="antialiased pb-24 font-body-md">
 
-<!-- HEADER -->
-<header class="glass sticky top-0 z-50" style="border-bottom:1px solid rgba(16,185,129,.2)">
-  <div style="max-width:1200px;margin:0 auto;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
-    <div style="display:flex;align-items:center;gap:.75rem">
-      <div style="width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#34d399,#059669);display:flex;align-items:center;justify-content:center;font-size:1.4rem">&#x1F33F;</div>
-      <div>
-        <h1 style="font-size:1.35rem;font-weight:800;color:#fff;margin:0">EcoPlate Live</h1>
-        <p style="font-size:.72rem;color:rgba(255,255,255,.4);margin:0">Thiruvananthapuram, Kerala</p>
+<!-- Header -->
+<header class="sticky top-0 z-40 bg-[#0f172a]/90 backdrop-blur-md border-b border-outline/20 px-4 py-3">
+  <div class="flex items-center justify-between">
+    <div class="flex flex-col gap-1">
+      <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary-fixed font-bold tracking-tight">EcoPlate Live</h1>
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[16px] text-outline">location_on</span>
+        <span class="font-label-sm text-label-sm text-surface-variant uppercase tracking-wider">Thiruvananthapuram</span>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
-      <div class="glass" style="display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border-radius:99px">
-        <div class="live-dot"></div>
-        <span style="font-size:.8125rem;font-weight:600;color:#fff"><span id="deal-count">0</span> active deals</span>
-      </div>
-      <a href="/vendor" style="font-size:.8125rem;color:#10b981;border:1px solid rgba(16,185,129,.3);padding:.5rem 1rem;border-radius:.75rem;text-decoration:none;font-weight:500;transition:all .2s"
-         onmouseover="this.style.background='rgba(16,185,129,.08)'"
-         onmouseout="this.style.background=''">Vendor Portal &#x2192;</a>
-    </div>
+    <a href="/vendor" class="font-label-sm text-label-sm text-primary-fixed-dim border border-outline/30 px-3 py-1.5 rounded-full hover:bg-[#1e293b] transition-colors">Vendor Portal →</a>
+  </div>
+  <div class="mt-3 flex items-center gap-2 bg-[#1e293b] rounded-full px-3 py-1.5 w-fit border border-outline/10">
+    <div class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></div>
+    <span class="font-label-mono text-label-mono text-primary-fixed-dim"><span id="deal-count">0</span> deals live now</span>
   </div>
 </header>
 
-<!-- FILTER CHIPS -->
-<div style="max-width:1200px;margin:0 auto;padding:1.25rem 1.5rem .5rem;display:flex;align-items:center;gap:.625rem;flex-wrap:wrap">
-  <span style="font-size:.75rem;color:rgba(255,255,255,.3);margin-right:.25rem">Sort:</span>
-  <button id="chip-all"      class="chip active">All Deals</button>
-  <button id="chip-ending"   class="chip">&#x23F0; Ending Soon</button>
-  <button id="chip-discount" class="chip">&#x1F525; Biggest Discount</button>
+<!-- Filter Bar -->
+<div class="px-4 py-4 hide-scrollbar overflow-x-auto whitespace-nowrap border-b border-outline/10">
+  <div class="flex gap-2">
+    <button id="chip-all" class="bg-primary text-on-primary border border-primary-container px-4 py-2 rounded-full font-label-sm text-label-sm hover:bg-primary-container transition-colors">All Deals</button>
+    <button id="chip-ending" class="bg-[#1e293b] text-surface-variant border border-outline/20 px-4 py-2 rounded-full font-label-sm text-label-sm hover:bg-[#1e293b]/80 transition-colors">Ending Soon</button>
+    <button id="chip-discount" class="bg-[#1e293b] text-surface-variant border border-outline/20 px-4 py-2 rounded-full font-label-sm text-label-sm hover:bg-[#1e293b]/80 transition-colors">Biggest Discount</button>
+  </div>
 </div>
 
-<!-- FEED GRID -->
-<main style="max-width:1200px;margin:0 auto;padding:1rem 1.5rem 4rem">
-  <div id="deals-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem"></div>
-  <div id="empty-state" style="display:none;text-align:center;padding:5rem 1rem">
-    <div style="font-size:3.5rem;margin-bottom:1rem">&#x1F331;</div>
-    <p style="color:rgba(255,255,255,.4);font-size:1.1rem;font-weight:500;margin:0 0 .4rem">No active deals right now.</p>
-    <p style="color:rgba(255,255,255,.25);font-size:.85rem;margin:0">Restaurants update regularly — check back soon!</p>
+<!-- Main Content -->
+<main class="p-4 space-y-4">
+  <div id="deals-list"></div>
+  <div id="empty-state" style="display:none" class="flex flex-col items-center justify-center py-12 px-4 text-center border border-dashed border-outline/20 rounded-xl bg-[#1e293b]/50">
+    <span class="material-symbols-outlined text-4xl text-outline mb-4">search_off</span>
+    <h3 class="font-headline-md text-headline-md text-surface-variant mb-2" style="font-size:1.1rem">No active deals right now</h3>
+    <p class="font-body-md text-body-md text-outline">Check back soon — restaurants update regularly.</p>
   </div>
 </main>
 
-<!-- CLAIM MODAL -->
-<div id="claim-modal">
-  <div class="modal-box">
-    <div style="font-size:3rem;margin-bottom:1rem">&#x1F389;</div>
-    <h3 style="font-size:1.25rem;font-weight:700;color:#fff;margin:0 0 .4rem">Deal Claimed!</h3>
-    <p style="font-size:.8125rem;color:rgba(255,255,255,.4);margin:0 0 1.5rem">Show this code to the restaurant staff at pickup:</p>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-[#0f172a] shadow-[0_-4px_12px_rgba(0,0,0,0.2)] md:hidden flex justify-around items-center px-4 py-2">
+  <button class="flex flex-col items-center justify-center text-primary-fixed-dim">
+    <span class="material-symbols-outlined">home</span>
+    <span class="font-label-sm text-label-sm">Home</span>
+  </button>
+  <button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary-fixed transition-colors">
+    <span class="material-symbols-outlined">list_alt</span>
+    <span class="font-label-sm text-label-sm">Inventory</span>
+  </button>
+  <button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1">
+    <span class="material-symbols-outlined text-primary-fixed">local_offer</span>
+    <span class="font-label-sm text-label-sm text-primary-fixed">Deals</span>
+  </button>
+  <button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary-fixed transition-colors">
+    <span class="material-symbols-outlined">bar_chart</span>
+    <span class="font-label-sm text-label-sm">Stats</span>
+  </button>
+</nav>
 
-    <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:1rem;padding:1.5rem;margin-bottom:1.25rem">
-      <div class="pickup-code" id="pickup-code">0000</div>
-      <div id="modal-item" style="font-size:.75rem;color:rgba(255,255,255,.35);margin-top:.5rem"></div>
-    </div>
-
-    <div style="font-size:.75rem;color:rgba(255,255,255,.3);background:rgba(255,255,255,.04);border-radius:.875rem;padding:.875rem;margin-bottom:1.5rem">
-      &#x1F550; Valid until pickup. No online payment needed. Present this code to collect your meal.
-    </div>
-
-    <button id="close-modal" class="claim-btn" style="background:linear-gradient(135deg,#10b981,#059669)">
-      Got it! &#x2713;
+<!-- Claim Modal -->
+<div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4" id="claim-modal">
+  <div class="bg-[#1e293b] w-full sm:w-96 rounded-t-2xl sm:rounded-2xl shadow-xl border border-outline/10 flex flex-col items-center p-6 relative">
+    <div class="w-12 h-1.5 bg-outline/30 rounded-full mb-6 sm:hidden"></div>
+    <button class="absolute top-4 right-4 text-outline hover:text-surface-variant" id="close-modal">
+      <span class="material-symbols-outlined">close</span>
     </button>
+    <h3 class="font-headline-md text-headline-md text-white mb-2 font-semibold" style="font-size:1.1rem">Deal Claimed!</h3>
+    <p class="font-body-md text-body-md text-surface-variant mb-6 text-center" id="modal-item-name">Item at Vendor</p>
+    <div class="bg-white p-4 rounded-xl mb-6 shadow-inner w-48 h-48 flex items-center justify-center">
+      <span class="material-symbols-outlined text-6xl text-gray-400">qr_code_2</span>
+    </div>
+    <div class="flex items-center gap-3 bg-primary-container/30 px-4 py-3 rounded-lg border border-primary/20 w-full mb-4">
+      <span class="material-symbols-outlined text-primary-fixed">qr_code_scanner</span>
+      <span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider">Scan at counter to pick up</span>
+    </div>
+    <p class="font-label-mono text-label-mono text-outline" id="modal-order-id">Order ID: #ECP-0000</p>
   </div>
 </div>
 
