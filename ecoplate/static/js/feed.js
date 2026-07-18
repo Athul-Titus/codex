@@ -138,6 +138,7 @@ function buildCard(s) {
     </button>
   </div>
 </article>`;
+}
 
 function iconFor(peri) {
   const map = { Dairy: "water_drop", Cooked: "soup_kitchen", Bakery: "bakery_dining", Produce: "eco" };
