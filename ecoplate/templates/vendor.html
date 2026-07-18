@@ -1,54 +1,33 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>EcoPlate B2B Terminal — Vendor Dashboard</title>
-<meta name="description" content="EcoPlate Vendor Portal: AI-powered dynamic pricing to recover revenue from surplus food and reduce waste." />
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>EcoPlate B2B Terminal - Vendor Dashboard</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Space+Mono:wght@500&display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
+<script>
   tailwind.config = {
     darkMode: "class",
     theme: {
       extend: {
-        "colors": {
-          "on-secondary-fixed": "#410000",
+        colors: {
           "primary-fixed": "#beedd7",
           "surface-tint": "#3b6756",
-          "on-secondary-fixed-variant": "#930002",
-          "on-tertiary-fixed-variant": "#214f41",
           "surface-variant": "#e1e3e3",
-          "surface-dim": "#d9dada",
-          "error-container": "#ffdad6",
-          "on-secondary-container": "#fffbff",
           "primary-fixed-dim": "#a2d1bb",
           "on-primary": "#ffffff",
           "on-surface": "#191c1c",
-          "on-tertiary-fixed": "#002118",
           "surface-container-high": "#e7e8e8",
           "inverse-primary": "#a2d1bb",
-          "on-background": "#191c1c",
-          "on-tertiary-container": "#7aa897",
-          "on-primary-fixed-variant": "#234f3f",
-          "on-error-container": "#93000a",
-          "on-secondary": "#ffffff",
-          "on-tertiary": "#ffffff",
+          "on-surface-variant": "#414944",
           "outline": "#717974",
           "secondary-container": "#dc3225",
-          "tertiary": "#00261c",
           "primary-container": "#0f3d2e",
           "surface-container-low": "#f3f4f4",
-          "tertiary-fixed": "#bcedda",
-          "tertiary-fixed-dim": "#a1d1bf",
           "primary": "#00261a",
           "error": "#ba1a1a",
           "on-error": "#ffffff",
-          "on-surface-variant": "#414944",
-          "inverse-surface": "#2e3131",
-          "on-primary-fixed": "#002116",
-          "surface-container-highest": "#e1e3e3",
           "outline-variant": "#c0c8c3",
           "surface": "#f8f9f9",
           "surface-container-lowest": "#ffffff",
@@ -56,363 +35,471 @@
           "surface-bright": "#f8f9f9",
           "background": "#f8f9f9",
           "secondary": "#b8130e",
-          "inverse-on-surface": "#f0f1f1",
           "secondary-fixed-dim": "#ffb4a9",
           "on-primary-container": "#7ba894",
           "surface-container": "#edeeee",
           "tertiary-container": "#0c3d30"
         },
-        "borderRadius": {
-          "DEFAULT": "0.125rem",
-          "lg": "0.25rem",
-          "xl": "0.5rem",
-          "full": "0.75rem"
+        borderRadius: {
+          DEFAULT: "0.125rem",
+          lg: "0.25rem",
+          xl: "0.5rem",
+          full: "0.75rem"
         },
-        "spacing": {
-          "stack-gap-sm": "8px",
-          "stack-gap-lg": "32px",
+        spacing: {
           "container-padding": "24px",
           "gutter": "16px",
           "stack-gap-md": "16px",
-          "sidebar-width": "260px",
-          "unit": "4px"
+          "stack-gap-lg": "32px",
+          "sidebar-width": "260px"
         },
-        "fontFamily": {
+        fontFamily: {
           "label-sm": ["Geist"],
           "display-metrics": ["Geist"],
           "headline-md": ["Geist"],
-          "headline-lg-mobile": ["Geist"],
           "body-md": ["Geist"],
-          "headline-lg": ["Geist"],
-          "body-lg": ["Geist"],
           "label-mono": ["Space Mono"]
         },
-        "fontSize": {
-          "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600"}],
-          "display-metrics": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-          "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-          "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-          "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
-          "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-          "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-          "label-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+        fontSize: {
+          "label-sm": ["11px", {lineHeight: "14px", letterSpacing: "0.02em", fontWeight: "600"}],
+          "display-metrics": ["48px", {lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700"}],
+          "headline-md": ["24px", {lineHeight: "32px", fontWeight: "600"}],
+          "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}],
+          "label-mono": ["12px", {lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "500"}]
         }
       }
     }
   }
 </script>
 <style>
-  .skeleton-shimmer {
-    background: linear-gradient(90deg, #edeeee 25%, #e7e8e8 50%, #edeeee 75%);
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite;
-  }
-  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-  .pulse-amber { animation: pulse-amber-anim 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-  @keyframes pulse-amber-anim { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-  .btn-active:active { box-shadow: inset 0px -2px 0px rgba(0,0,0,0.2); transform: translateY(2px); }
-  .toast { position:fixed; bottom:1.5rem; right:1.5rem; z-index:9999; transform:translateY(80px); opacity:0; transition:all .35s cubic-bezier(.34,1.56,.64,1); }
-  .toast.show { transform:translateY(0); opacity:1; }
-  .spin { animation: spin .7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  *{font-family:'Geist',sans-serif;box-sizing:border-box}
+  .skeleton-shimmer{background:linear-gradient(90deg,#edeeee 25%,#e7e8e8 50%,#edeeee 75%);background-size:200% 100%;animation:shimmer 2s infinite}
+  @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+  .pulse-amber{animation:pamber 2s cubic-bezier(.4,0,.6,1) infinite}
+  @keyframes pamber{0%,100%{opacity:1}50%{opacity:.5}}
+  .btn-active:active{transform:translateY(2px)}
+  .section-content{display:none}
+  .section-content.active{display:block}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:4px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#414944;cursor:pointer;transition:all .15s;text-decoration:none}
+  .nav-item:hover{background:#e7e8e8;color:#234f3f}
+  .nav-item.active{background:#00261a;color:#fff}
+  .toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;transform:translateY(80px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+  .toast.show{transform:translateY(0);opacity:1}
+  .spin{animation:spin .7s linear infinite;display:inline-block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .impact-card{background:linear-gradient(135deg,#00261a,#0f3d2e);color:#beedd7;border-radius:8px;padding:20px}
+  details summary::-webkit-details-marker{display:none}
+  .chart-bar { transition: height 0.5s ease-out; }
 </style>
 </head>
 <body class="bg-background text-on-background font-body-md min-h-screen flex antialiased">
 
-<!-- Sidebar -->
-<nav class="hidden md:flex flex-col p-stack-gap-md h-full bg-surface-container border-r border-outline-variant fixed left-0 top-0 w-sidebar-width z-20">
-  <div class="flex items-center gap-3 mb-8 px-2">
-    <div class="w-8 h-8 rounded-DEFAULT bg-primary flex items-center justify-center text-on-primary font-bold text-sm">🌿</div>
+<!-- SIDEBAR -->
+<nav id="sidebar" class="hidden md:flex flex-col p-4 h-full bg-surface-container border-r border-outline-variant fixed left-0 top-0 w-sidebar-width z-20 overflow-y-auto">
+  <div class="flex items-center gap-3 mb-6 px-1">
+    <div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-white text-sm font-bold">🌿</div>
     <div>
-      <h1 class="font-headline-md text-headline-md text-primary" style="font-size:1rem">EcoPlate B2B</h1>
-      <p class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Climate-Tech Terminal</p>
+      <div class="font-bold text-primary" style="font-size:.95rem">EcoPlate B2B</div>
+      <div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Climate-Tech Terminal</div>
     </div>
   </div>
-  <button class="w-full bg-primary text-on-primary py-2 px-4 rounded-DEFAULT font-label-sm text-label-sm uppercase tracking-wider mb-6 hover:bg-surface-tint transition-colors btn-active flex items-center justify-center gap-2">
-    <span class="material-symbols-outlined">campaign</span> Broadcast Deals
+
+  <button onclick="goSection('dashboard');focusForm()" class="w-full bg-primary text-on-primary py-2 px-3 rounded font-label-sm text-label-sm uppercase tracking-wider mb-4 hover:bg-surface-tint transition-colors btn-active flex items-center justify-center gap-2">
+    <span class="material-symbols-outlined text-[16px]">campaign</span> Broadcast Deals
   </button>
-  <ul class="flex-1 space-y-2">
-    <li><a class="flex items-center gap-3 px-3 py-2 bg-primary text-on-primary rounded-lg font-label-sm text-label-sm uppercase tracking-wider" href="#">
-      <span class="material-symbols-outlined">dashboard</span> Dashboard
-    </a></li>
-    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest hover:text-primary-fixed-variant transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="#">
-      <span class="material-symbols-outlined">inventory_2</span> Inventory
-    </a></li>
-    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest hover:text-primary-fixed-variant transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="#">
-      <span class="material-symbols-outlined">storefront</span> Marketplace
-    </a></li>
-    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest hover:text-primary-fixed-variant transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="#">
-      <span class="material-symbols-outlined">monitoring</span> Analytics
-    </a></li>
-    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest hover:text-primary-fixed-variant transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="#">
-      <span class="material-symbols-outlined">eco</span> Sustainability
-    </a></li>
+
+  <ul class="flex-1 space-y-1">
+    <li><a class="nav-item active" data-section="dashboard" onclick="goSection('dashboard')"><span class="material-symbols-outlined text-[18px]">dashboard</span>Dashboard</a></li>
+    <li><a class="nav-item" data-section="inventory" onclick="goSection('inventory')"><span class="material-symbols-outlined text-[18px]">inventory_2</span>Inventory</a></li>
+    <li><a class="nav-item" data-section="marketplace" onclick="goSection('marketplace')"><span class="material-symbols-outlined text-[18px]">storefront</span>Marketplace</a></li>
+    <li><a class="nav-item" data-section="analytics" onclick="goSection('analytics')"><span class="material-symbols-outlined text-[18px]">monitoring</span>Analytics</a></li>
+    <li><a class="nav-item" data-section="sustainability" onclick="goSection('sustainability')"><span class="material-symbols-outlined text-[18px]">eco</span>Sustainability</a></li>
   </ul>
-  <ul class="mt-auto space-y-2 border-t border-outline-variant pt-4">
-    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="#">
-      <span class="material-symbols-outlined">help</span> Support
-    </a></li>
-    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="#">
-      <span class="material-symbols-outlined">settings</span> Settings
-    </a></li>
-    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="/">
-      <span class="material-symbols-outlined">open_in_new</span> Consumer Feed
-    </a></li>
+  <ul class="mt-auto space-y-1 border-t border-outline-variant pt-3">
+    <li><a class="nav-item" data-section="support" onclick="goSection('support')"><span class="material-symbols-outlined text-[18px]">help</span>Support</a></li>
+    <li><a class="nav-item" data-section="settings" onclick="goSection('settings')"><span class="material-symbols-outlined text-[18px]">settings</span>Settings</a></li>
+    <li><a class="nav-item" href="/" target="_blank"><span class="material-symbols-outlined text-[18px]">open_in_new</span>Consumer Feed</a></li>
   </ul>
 </nav>
 
-<!-- Main -->
+<!-- MAIN -->
 <main class="flex-1 ml-0 md:ml-[260px] min-h-screen flex flex-col">
-
-  <!-- Top Bar -->
-  <header class="flex justify-between items-center w-full px-container-padding h-16 bg-surface border-b border-outline-variant sticky top-0 z-10">
-    <div class="flex items-center gap-4">
-      <h2 class="font-headline-md text-headline-md font-bold text-primary hidden md:block" style="font-size:1.1rem">Vendor Portal</h2>
+  <header class="flex justify-between items-center w-full px-6 h-16 bg-surface border-b border-outline-variant sticky top-0 z-10">
+    <div class="flex items-center gap-3">
+      <button onclick="toggleMobileMenu()" class="md:hidden text-on-surface-variant"><span class="material-symbols-outlined">menu</span></button>
+      <h2 class="font-bold text-primary" id="page-title" style="font-size:1.1rem">Vendor Portal — Dashboard</h2>
     </div>
-    <div class="flex-1 max-w-md mx-8 hidden md:block">
+    <div class="flex-1 max-w-sm mx-6 hidden md:block">
       <div class="relative flex items-center">
-        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant">search</span>
-        <input class="w-full bg-surface-container-low border border-outline-variant rounded-DEFAULT py-1.5 pl-10 pr-4 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Search inventory, analytics..." type="text"/>
+        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[18px]">search</span>
+        <input id="global-search" class="w-full bg-surface-container-low border border-outline-variant rounded py-1.5 pl-9 pr-3 text-body-md focus:outline-none focus:border-primary" placeholder="Search inventory..." type="text" oninput="handleSearch(this.value)"/>
       </div>
     </div>
-    <div class="flex items-center gap-4">
-      <button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors relative">
+    <div class="flex items-center gap-3">
+      <button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full relative">
         <span class="material-symbols-outlined">notifications</span>
         <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-secondary-container rounded-full"></span>
       </button>
-      <button class="font-label-sm text-label-sm bg-primary text-on-primary px-4 py-1.5 rounded-DEFAULT hover:bg-surface-tint transition-colors btn-active flex items-center gap-1">
+      <button onclick="goSection('dashboard');focusForm()" class="font-label-sm text-label-sm bg-primary text-on-primary px-4 py-1.5 rounded hover:bg-surface-tint transition-colors btn-active flex items-center gap-1">
         <span class="material-symbols-outlined text-[16px]">add</span> New Entry
       </button>
     </div>
   </header>
 
-  <div class="p-container-padding flex-1 flex flex-col gap-stack-lg overflow-y-auto">
+  <!-- MOBILE MENU -->
+  <div id="mobile-menu" class="md:hidden fixed inset-0 z-30 hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="toggleMobileMenu()"></div>
+    <nav class="absolute left-0 top-0 h-full w-64 bg-surface-container p-4 flex flex-col">
+      <div class="flex items-center gap-3 mb-4"><div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-white">🌿</div><span class="font-bold text-primary">EcoPlate B2B</span></div>
+      <ul class="space-y-1">
+        <li><a class="nav-item active" data-section="dashboard" onclick="goSection('dashboard');toggleMobileMenu()"><span class="material-symbols-outlined text-[18px]">dashboard</span>Dashboard</a></li>
+        <li><a class="nav-item" data-section="inventory" onclick="goSection('inventory');toggleMobileMenu()"><span class="material-symbols-outlined text-[18px]">inventory_2</span>Inventory</a></li>
+        <li><a class="nav-item" data-section="marketplace" onclick="goSection('marketplace');toggleMobileMenu()"><span class="material-symbols-outlined text-[18px]">storefront</span>Marketplace</a></li>
+        <li><a class="nav-item" data-section="analytics" onclick="goSection('analytics');toggleMobileMenu()"><span class="material-symbols-outlined text-[18px]">monitoring</span>Analytics</a></li>
+        <li><a class="nav-item" data-section="sustainability" onclick="goSection('sustainability');toggleMobileMenu()"><span class="material-symbols-outlined text-[18px]">eco</span>Sustainability</a></li>
+        <li><a class="nav-item" data-section="support" onclick="goSection('support');toggleMobileMenu()"><span class="material-symbols-outlined text-[18px]">help</span>Support</a></li>
+        <li><a class="nav-item" data-section="settings" onclick="goSection('settings');toggleMobileMenu()"><span class="material-symbols-outlined text-[18px]">settings</span>Settings</a></li>
+        <li><a class="nav-item" href="/" target="_blank"><span class="material-symbols-outlined text-[18px]">open_in_new</span>Consumer Feed</a></li>
+      </ul>
+    </nav>
+  </div>
 
-    <!-- Metrics Strip -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-      <div class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col gap-1">
-        <div class="flex justify-between items-center text-on-surface-variant mb-1">
-          <span class="font-label-mono text-label-mono uppercase">Revenue Recovered</span>
-          <span class="material-symbols-outlined text-[16px]">payments</span>
-        </div>
-        <div class="font-display-metrics text-display-metrics text-primary tabular-nums" id="stat-revenue">&#x20B9;0</div>
-      </div>
-      <div class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col gap-1">
-        <div class="flex justify-between items-center text-on-surface-variant mb-1">
-          <span class="font-label-mono text-label-mono uppercase">Meals Saved</span>
-          <span class="material-symbols-outlined text-[16px]">restaurant</span>
-        </div>
-        <div class="font-display-metrics text-display-metrics text-primary tabular-nums" id="stat-meals">0</div>
-      </div>
-      <div class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col gap-1 relative overflow-hidden">
-        <div class="absolute -right-4 -bottom-4 opacity-10 text-primary">
-          <span class="material-symbols-outlined text-[100px]">eco</span>
-        </div>
-        <div class="flex justify-between items-center text-on-surface-variant mb-1 relative z-10">
-          <span class="font-label-mono text-label-mono uppercase">CO&#x2082; Avoided</span>
-          <span class="material-symbols-outlined text-[16px]">co2</span>
-        </div>
-        <div class="font-display-metrics text-display-metrics text-primary tabular-nums relative z-10" id="stat-co2">0 <span class="text-headline-md text-on-surface-variant font-normal">kg</span></div>
-      </div>
-    </section>
+  <div class="p-container-padding flex-1 flex flex-col gap-stack-lg overflow-y-auto pb-20 md:pb-6">
 
-    <!-- Main Workspace -->
-    <section class="grid grid-cols-1 lg:grid-cols-12 gap-gutter flex-1">
-
-      <!-- Left: Input Card -->
-      <div class="lg:col-span-5 bg-surface border border-outline-variant rounded-lg flex flex-col">
-        <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest rounded-t-lg">
-          <h3 class="font-label-mono text-label-mono uppercase text-on-surface">Surplus Entry</h3>
-          <span class="material-symbols-outlined text-on-surface-variant text-[18px]">add_box</span>
+    <!-- DASHBOARD -->
+    <div id="section-dashboard" class="section-content active flex flex-col gap-stack-lg">
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+        <div class="bg-surface border border-outline-variant rounded-lg p-4">
+          <div class="flex justify-between items-center text-on-surface-variant mb-1"><span class="font-label-mono text-label-mono uppercase">Revenue Recovered</span><span class="material-symbols-outlined text-[16px]">payments</span></div>
+          <div class="font-display-metrics text-display-metrics text-primary tabular-nums" id="stat-revenue">&#x20B9;0</div>
         </div>
-
-        <!-- Form -->
-        <div id="form-section" class="p-container-padding flex-1 flex flex-col gap-stack-md">
-          <div class="space-y-1">
-            <label class="font-label-sm text-label-sm text-on-surface-variant block">Item Name *</label>
-            <input id="f-item" class="w-full bg-surface-bright border border-outline-variant rounded-DEFAULT px-3 py-2 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="e.g. Sourdough Loaves, Mixed Salads..." type="text"/>
+        <div class="bg-surface border border-outline-variant rounded-lg p-4">
+          <div class="flex justify-between items-center text-on-surface-variant mb-1"><span class="font-label-mono text-label-mono uppercase">Meals Saved</span><span class="material-symbols-outlined text-[16px]">restaurant</span></div>
+          <div class="font-display-metrics text-display-metrics text-primary tabular-nums" id="stat-meals">0</div>
+        </div>
+        <div class="bg-surface border border-outline-variant rounded-lg p-4 relative overflow-hidden">
+          <div class="absolute -right-4 -bottom-4 opacity-10 text-primary"><span class="material-symbols-outlined text-[100px]">eco</span></div>
+          <div class="flex justify-between items-center text-on-surface-variant mb-1 relative z-10"><span class="font-label-mono text-label-mono uppercase">CO&#x2082; Avoided</span><span class="material-symbols-outlined text-[16px]">co2</span></div>
+          <div class="font-display-metrics text-display-metrics text-primary tabular-nums relative z-10" id="stat-co2">0 <span class="text-headline-md text-on-surface-variant font-normal">kg</span></div>
+        </div>
+      </section>
+      
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+        <!-- Input Form -->
+        <div class="lg:col-span-5 bg-surface border border-outline-variant rounded-lg flex flex-col">
+          <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest rounded-t-lg">
+            <h3 class="font-label-mono text-label-mono uppercase text-on-surface">Surplus Entry</h3>
+            <span class="material-symbols-outlined text-on-surface-variant text-[18px]">add_box</span>
           </div>
-          <div class="space-y-1">
-            <label class="font-label-sm text-label-sm text-on-surface-variant block">Restaurant / Vendor *</label>
-            <input id="f-vendor" class="w-full bg-surface-bright border border-outline-variant rounded-DEFAULT px-3 py-2 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="e.g. Hotel Abad Plaza" type="text"/>
-          </div>
-          <div class="grid grid-cols-2 gap-gutter">
+          <div class="p-container-padding flex-1 flex flex-col gap-stack-md">
             <div class="space-y-1">
-              <label class="font-label-sm text-label-sm text-on-surface-variant block">Quantity *</label>
-              <div class="relative">
-                <input id="f-qty" class="w-full bg-surface-bright border border-outline-variant rounded-DEFAULT px-3 py-2 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all pr-12" placeholder="0" type="number" min="1"/>
-                <span class="absolute right-3 top-2 text-on-surface-variant text-body-md">units</span>
+              <label class="font-label-sm text-label-sm text-on-surface-variant block">Item Name *</label>
+              <input id="f-item" class="w-full bg-surface-bright border border-outline-variant rounded px-3 py-2 text-body-md focus:outline-none focus:border-primary transition-all" placeholder="e.g. Paneer Butter Masala" type="text"/>
+            </div>
+            <div class="space-y-1">
+              <label class="font-label-sm text-label-sm text-on-surface-variant block">Restaurant / Vendor *</label>
+              <input id="f-vendor" class="w-full bg-surface-bright border border-outline-variant rounded px-3 py-2 text-body-md focus:outline-none focus:border-primary transition-all" placeholder="e.g. Hotel Abad Plaza" type="text"/>
+            </div>
+            <div class="grid grid-cols-2 gap-gutter">
+              <div class="space-y-1">
+                <label class="font-label-sm text-label-sm text-on-surface-variant block">Quantity *</label>
+                <div class="relative">
+                  <input id="f-qty" class="w-full bg-surface-bright border border-outline-variant rounded px-3 py-2 text-body-md focus:outline-none focus:border-primary pr-12" placeholder="0" type="number" min="1"/>
+                  <span class="absolute right-3 top-2 text-on-surface-variant text-body-md">units</span>
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label class="font-label-sm text-label-sm text-on-surface-variant block">Original Price *</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-2 text-on-surface-variant">&#x20B9;</span>
+                  <input id="f-price" class="w-full bg-surface-bright border border-outline-variant rounded px-3 py-2 pl-7 text-body-md focus:outline-none focus:border-primary" placeholder="0.00" type="number" min="1"/>
+                </div>
               </div>
             </div>
             <div class="space-y-1">
-              <label class="font-label-sm text-label-sm text-on-surface-variant block">Original Price *</label>
-              <div class="relative">
-                <span class="absolute left-3 top-2 text-on-surface-variant text-body-md">&#x20B9;</span>
-                <input id="f-price" class="w-full bg-surface-bright border border-outline-variant rounded-DEFAULT px-3 py-2 pl-8 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="0.00" type="number" min="1"/>
-              </div>
+              <label class="font-label-sm text-label-sm text-on-surface-variant block">Time-to-Close</label>
+              <select id="f-hours" class="w-full bg-surface-bright border border-outline-variant rounded px-3 py-2 text-body-md focus:outline-none focus:border-primary">
+                <option value="0.5">30 Minutes</option>
+                <option value="1">1 Hour</option>
+                <option value="2">2 Hours</option>
+              </select>
             </div>
-          </div>
-          <div class="space-y-1">
-            <label class="font-label-sm text-label-sm text-on-surface-variant block">Time-to-Close (Expiry Window)</label>
-            <select id="f-hours" class="w-full bg-surface-bright border border-outline-variant rounded-DEFAULT px-3 py-2 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
-              <option value="0.5">30 Minutes</option>
-              <option value="1">1 Hour</option>
-              <option value="2">2 Hours</option>
-            </select>
-          </div>
-          <div class="space-y-2">
-            <label class="font-label-sm text-label-sm text-on-surface-variant block">Perishability Tags</label>
-            <div class="flex flex-wrap gap-2">
-              <label class="cursor-pointer">
-                <input class="peer sr-only" type="radio" name="perishability" value="Cooked" checked/>
-                <div class="px-3 py-1 border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface-variant peer-checked:bg-primary peer-checked:text-on-primary peer-checked:border-primary transition-colors">Cooked</div>
-              </label>
-              <label class="cursor-pointer">
-                <input class="peer sr-only" type="radio" name="perishability" value="Dairy"/>
-                <div class="px-3 py-1 border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface-variant peer-checked:bg-primary peer-checked:text-on-primary peer-checked:border-primary transition-colors">Dairy</div>
-              </label>
-              <label class="cursor-pointer">
-                <input class="peer sr-only" type="radio" name="perishability" value="Bakery"/>
-                <div class="px-3 py-1 border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface-variant peer-checked:bg-primary peer-checked:text-on-primary peer-checked:border-primary transition-colors">Bakery</div>
-              </label>
-              <label class="cursor-pointer">
-                <input class="peer sr-only" type="radio" name="perishability" value="Produce"/>
-                <div class="px-3 py-1 border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface-variant peer-checked:bg-primary peer-checked:text-on-primary peer-checked:border-primary transition-colors">Produce</div>
-              </label>
-            </div>
-          </div>
-          <div class="mt-auto pt-4">
-            <button class="w-full bg-primary text-on-primary py-3 px-4 rounded-DEFAULT font-label-sm text-label-sm uppercase tracking-wider hover:bg-surface-tint transition-colors btn-active flex justify-center items-center gap-2" id="calculateBtn">
-              <span class="material-symbols-outlined">model_training</span>
-              Calculate Optimal Clearance Strategy
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right: AI Result Card -->
-      <div class="lg:col-span-7 bg-surface-bright border border-outline-variant rounded-lg relative overflow-hidden flex flex-col min-h-[400px]">
-        <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest z-10">
-          <h3 class="font-label-mono text-label-mono uppercase text-on-surface flex items-center gap-2">
-            <span class="material-symbols-outlined text-[16px] text-primary">auto_awesome</span>
-            Strategy Engine
-          </h3>
-          <div class="flex items-center gap-2">
-            <div class="px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed-variant rounded-DEFAULT font-label-mono text-[10px] uppercase border border-secondary-fixed-dim pulse-amber" id="conf-badge" style="display:none">
-              Model confidence: <span id="res-conf">87</span>%
-            </div>
-          </div>
-        </div>
-
-        <!-- Skeleton -->
-        <div class="absolute inset-0 top-[53px] bg-surface-bright z-10 flex flex-col items-center justify-center p-8 transition-opacity duration-500" id="aiSkeleton">
-          <div class="w-full max-w-md space-y-4">
-            <div class="h-4 w-3/4 skeleton-shimmer rounded-DEFAULT mx-auto"></div>
-            <div class="h-24 w-full skeleton-shimmer rounded-lg"></div>
-            <div class="grid grid-cols-2 gap-4">
-              <div class="h-16 skeleton-shimmer rounded-lg"></div>
-              <div class="h-16 skeleton-shimmer rounded-lg"></div>
-            </div>
-            <div class="text-center mt-6">
-              <p class="font-label-mono text-label-mono text-on-surface-variant animate-pulse" id="skeletonCaption">Waiting for input...</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Result (hidden initially) -->
-        <div class="flex-1 p-container-padding flex flex-col gap-stack-lg opacity-0 transition-opacity duration-500" id="aiResult" style="pointer-events:none">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter items-start">
             <div class="space-y-2">
-              <span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Suggested Clearance Price</span>
-              <div class="font-display-metrics text-display-metrics text-primary tabular-nums tracking-tighter" id="res-price">
-                &#x20B9;0<span class="text-headline-md text-on-surface-variant font-normal">/unit</span>
-              </div>
-              <p class="text-body-md text-on-surface-variant" id="res-desc">AI-optimised based on urgency and spoilage risk.</p>
-            </div>
-            <div class="bg-surface-container-low border border-outline-variant rounded-lg p-4 space-y-3">
-              <div class="flex justify-between items-center pb-2 border-b border-outline-variant">
-                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Est. Revenue Recovery</span>
-                <span class="font-headline-md text-headline-md text-primary font-bold" id="res-rev" style="font-size:1.1rem">&#x20B9;0</span>
-              </div>
-              <div class="flex justify-between items-center text-body-md">
-                <span class="text-on-surface-variant">Discount Applied</span>
-                <span class="text-on-surface font-semibold" id="res-disc">0%</span>
-              </div>
-              <div class="flex justify-between items-center text-body-md">
-                <span class="text-on-surface-variant">CO&#x2082; Mitigation Est.</span>
-                <span class="text-primary-fixed-variant font-semibold" id="res-co2">0 kg</span>
+              <label class="font-label-sm text-label-sm text-on-surface-variant block">Perishability Tag</label>
+              <div class="flex flex-wrap gap-2">
+                <label class="cursor-pointer"><input class="peer sr-only" type="radio" name="perishability" value="Cooked" checked/><div class="px-3 py-1 border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface-variant peer-checked:bg-primary peer-checked:text-on-primary peer-checked:border-primary transition-colors">Cooked</div></label>
+                <label class="cursor-pointer"><input class="peer sr-only" type="radio" name="perishability" value="Dairy"/><div class="px-3 py-1 border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface-variant peer-checked:bg-primary peer-checked:text-on-primary peer-checked:border-primary transition-colors">Dairy</div></label>
+                <label class="cursor-pointer"><input class="peer sr-only" type="radio" name="perishability" value="Bakery"/><div class="px-3 py-1 border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface-variant peer-checked:bg-primary peer-checked:text-on-primary peer-checked:border-primary transition-colors">Bakery</div></label>
+                <label class="cursor-pointer"><input class="peer sr-only" type="radio" name="perishability" value="Produce"/><div class="px-3 py-1 border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface-variant peer-checked:bg-primary peer-checked:text-on-primary peer-checked:border-primary transition-colors">Produce</div></label>
               </div>
             </div>
-          </div>
-          <div class="flex-1 flex flex-col gap-2">
-            <label class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Broadcast Copy</label>
-            <textarea id="broadcast-txt" class="w-full flex-1 bg-surface border border-outline-variant rounded-DEFAULT p-3 text-body-md font-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary resize-none min-h-[80px]"></textarea>
-          </div>
-          <div class="pt-4 border-t border-outline-variant flex justify-end gap-3 mt-auto">
-            <button id="new-btn" class="px-4 py-2 border border-primary text-primary rounded-DEFAULT font-label-sm text-label-sm uppercase tracking-wider hover:bg-surface-container-low transition-colors btn-active">
-              Edit / New
-            </button>
-            <button id="publish-btn" class="bg-primary text-on-primary py-2 px-6 rounded-DEFAULT font-label-sm text-label-sm uppercase tracking-wider hover:bg-surface-tint transition-colors btn-active flex items-center gap-2 shadow-sm">
-              <span class="material-symbols-outlined text-[18px]">check_circle</span>
-              Publish &amp; Broadcast
-            </button>
+            <div class="mt-auto pt-4">
+              <button class="w-full bg-primary text-on-primary py-3 px-4 rounded font-label-sm text-label-sm uppercase tracking-wider hover:bg-surface-tint transition-colors btn-active flex justify-center items-center gap-2" id="calculateBtn">
+                <span class="material-symbols-outlined text-[16px]">model_training</span>
+                Calculate Optimal Clearance Strategy
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+        
+        <!-- Strategy Engine Output -->
+        <div class="lg:col-span-7 bg-surface-bright border border-outline-variant rounded-lg relative overflow-hidden flex flex-col min-h-[420px]">
+          <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest z-10">
+            <h3 class="font-label-mono text-label-mono uppercase text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-[16px] text-primary">auto_awesome</span>Strategy Engine
+            </h3>
+            <div id="conf-badge" class="hidden px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed-variant rounded font-label-mono text-[10px] uppercase border border-secondary-fixed-dim pulse-amber">
+              Confidence: <span id="res-conf">87</span>%
+            </div>
+          </div>
+          <!-- Skeleton -->
+          <div class="absolute inset-0 top-[53px] bg-surface-bright z-10 flex flex-col items-center justify-center p-8" id="aiSkeleton">
+            <div class="w-full max-w-md space-y-4">
+              <div class="h-4 w-3/4 skeleton-shimmer rounded mx-auto"></div>
+              <div class="h-24 w-full skeleton-shimmer rounded-lg"></div>
+              <div class="grid grid-cols-2 gap-4"><div class="h-16 skeleton-shimmer rounded-lg"></div><div class="h-16 skeleton-shimmer rounded-lg"></div></div>
+              <div class="text-center mt-4"><p class="font-label-mono text-label-mono text-on-surface-variant animate-pulse" id="skeletonCaption">Waiting for input...</p></div>
+            </div>
+          </div>
+          <!-- Result -->
+          <div class="flex-1 p-container-padding flex flex-col gap-4 opacity-0 transition-opacity duration-500" id="aiResult" style="pointer-events:none">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter items-start">
+              <div class="space-y-2">
+                <span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Suggested Clearance Price</span>
+                <div class="font-display-metrics text-display-metrics text-primary tabular-nums tracking-tighter" id="res-price">&#x20B9;0<span class="text-headline-md text-on-surface-variant font-normal">/unit</span></div>
+                <p class="text-body-md text-on-surface-variant" id="res-desc">AI-optimised based on urgency and spoilage risk.</p>
+              </div>
+              <div class="bg-surface-container-low border border-outline-variant rounded-lg p-4 space-y-3">
+                <div class="flex justify-between items-center pb-2 border-b border-outline-variant">
+                  <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Est. Revenue Recovery</span>
+                  <span class="font-bold text-primary" style="font-size:1rem" id="res-rev">&#x20B9;0</span>
+                </div>
+                <div class="flex justify-between text-body-md"><span class="text-on-surface-variant">Discount Applied</span><span class="font-semibold" id="res-disc">0%</span></div>
+                <div class="flex justify-between text-body-md"><span class="text-on-surface-variant">CO&#x2082; Mitigation</span><span class="text-primary-fixed-variant font-semibold" id="res-co2">0 kg</span></div>
+              </div>
+            </div>
+            <div class="flex flex-col gap-2 flex-1">
+              <div class="flex items-center justify-between">
+                <label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Broadcast Copy</label>
+                <button id="ai-gen-btn" class="flex items-center gap-1 text-primary border border-primary rounded px-2 py-1 font-label-sm text-label-sm hover:bg-primary hover:text-on-primary transition-colors btn-active">
+                  <span class="material-symbols-outlined text-[14px]">auto_awesome</span> AI Rewrite
+                </button>
+              </div>
+              <textarea id="broadcast-txt" class="w-full flex-1 bg-surface border border-outline-variant rounded p-3 text-body-md focus:outline-none focus:border-primary resize-none min-h-[80px]"></textarea>
+            </div>
+            <div class="pt-4 border-t border-outline-variant flex justify-end gap-3 mt-auto flex-wrap">
+              <button id="new-btn" class="px-4 py-2 border border-primary text-primary rounded font-label-sm text-label-sm uppercase tracking-wider hover:bg-surface-container-low transition-colors btn-active">
+                Edit / New
+              </button>
+              <button id="publish-btn" class="bg-primary text-on-primary py-2 px-6 rounded font-label-sm text-label-sm uppercase tracking-wider hover:bg-surface-tint transition-colors btn-active flex items-center gap-2 shadow-sm">
+                <span class="material-symbols-outlined text-[18px]">check_circle</span>Publish &amp; Broadcast
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    <!-- Analytics Strip / Sparkline -->
-    <section class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col md:flex-row items-center gap-4 justify-between">
-      <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-on-surface-variant">monitoring</span>
-        <div>
-          <h4 class="font-label-sm text-label-sm uppercase text-on-surface">Last 5 Published Discounts</h4>
-          <p class="text-label-mono text-on-surface-variant" style="font-size:.7rem">Live from session</p>
+      <!-- Sparkline strip -->
+      <section class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col md:flex-row items-center gap-4 justify-between">
+        <div class="flex items-center gap-3"><span class="material-symbols-outlined text-on-surface-variant">monitoring</span><div><h4 class="font-label-sm text-label-sm uppercase text-on-surface">Last 5 Published Discounts</h4><p class="text-on-surface-variant" style="font-size:.7rem">Live from session</p></div></div>
+        <div class="flex-1 max-w-md w-full h-8 flex items-end gap-1" id="sparkline-strip"></div>
+        <div class="text-right">
+          <div class="font-bold text-primary" style="font-size:1.25rem" id="spark-latest">--</div>
+          <div class="text-on-surface-variant flex items-center justify-end gap-1" style="font-size:.7rem"><span class="material-symbols-outlined text-[12px]">trending_up</span>Latest</div>
+        </div>
+      </section>
+    </div>
+
+    <!-- INVENTORY -->
+    <div id="section-inventory" class="section-content flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <h2 class="font-bold text-primary" style="font-size:1.1rem">Active Inventory</h2>
+        <button onclick="loadInventory()" class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant hover:text-primary">
+          <span class="material-symbols-outlined text-[16px]">refresh</span>Refresh
+        </button>
+      </div>
+      <div class="bg-surface-container-low rounded-lg px-3 py-2 flex items-center gap-2 border border-outline-variant">
+        <span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span>
+        <input id="inv-search" class="flex-1 bg-transparent text-body-md focus:outline-none" placeholder="Filter by item or vendor..." oninput="filterInventory(this.value)"/>
+      </div>
+      <div class="bg-surface border border-outline-variant rounded-lg overflow-x-auto">
+        <table class="w-full min-w-[600px]">
+          <thead class="bg-surface-container-lowest border-b border-outline-variant">
+            <tr>
+              <th class="text-left p-3 font-label-mono text-label-mono text-on-surface-variant uppercase">Item</th>
+              <th class="text-left p-3 font-label-mono text-label-mono text-on-surface-variant uppercase">Vendor</th>
+              <th class="text-right p-3 font-label-mono text-label-mono text-on-surface-variant uppercase">Qty</th>
+              <th class="text-right p-3 font-label-mono text-label-mono text-on-surface-variant uppercase">Original</th>
+              <th class="text-right p-3 font-label-mono text-label-mono text-on-surface-variant uppercase">Sale Price</th>
+              <th class="text-right p-3 font-label-mono text-label-mono text-on-surface-variant uppercase">Disc.</th>
+              <th class="text-center p-3 font-label-mono text-label-mono text-on-surface-variant uppercase">Status</th>
+              <th class="text-center p-3 font-label-mono text-label-mono text-on-surface-variant uppercase">Action</th>
+            </tr>
+          </thead>
+          <tbody id="inventory-tbody" class="divide-y divide-outline-variant">
+            <tr><td colspan="8" class="p-6 text-center text-on-surface-variant">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="font-label-mono text-label-mono text-on-surface-variant" id="inv-count"></p>
+    </div>
+
+    <!-- MARKETPLACE -->
+    <div id="section-marketplace" class="section-content flex flex-col gap-4">
+      <h2 class="font-bold text-primary" style="font-size:1.1rem">Consumer Marketplace</h2>
+      <div class="bg-surface border border-outline-variant rounded-lg p-8 text-center">
+        <span class="material-symbols-outlined text-primary text-[56px] mb-4 block">storefront</span>
+        <p class="text-body-md text-on-surface-variant mb-6 max-w-md mx-auto">The public consumer feed shows all your live deals in real time. Customers in Thiruvananthapuram can discover and claim deals directly.</p>
+        <a href="/" target="_blank" class="inline-flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded font-label-sm text-label-sm uppercase tracking-wider hover:bg-surface-tint transition-colors btn-active">
+          <span class="material-symbols-outlined text-[18px]">open_in_new</span>Open Consumer Feed
+        </a>
+        <div class="mt-6 grid grid-cols-2 gap-4 max-w-xs mx-auto text-left">
+          <div class="bg-surface-container-low border border-outline-variant rounded-lg p-4">
+            <div class="font-label-mono text-label-mono text-on-surface-variant uppercase mb-1">Active Deals</div>
+            <div class="font-bold text-primary" style="font-size:1.75rem" id="mkt-active">--</div>
+          </div>
+          <div class="bg-surface-container-low border border-outline-variant rounded-lg p-4">
+            <div class="font-label-mono text-label-mono text-on-surface-variant uppercase mb-1">Total Listed</div>
+            <div class="font-bold text-primary" style="font-size:1.75rem" id="mkt-total">--</div>
+          </div>
         </div>
       </div>
-      <div class="flex-1 max-w-md w-full h-8 flex items-end gap-1" id="sparkline-strip">
-        <div class="w-1/6 h-[30%] bg-surface-container-highest rounded-t-sm"></div>
-        <div class="w-1/6 h-[50%] bg-surface-container-highest rounded-t-sm"></div>
-        <div class="w-1/6 h-[40%] bg-surface-container-highest rounded-t-sm"></div>
-        <div class="w-1/6 h-[70%] bg-primary-fixed-dim rounded-t-sm"></div>
-        <div class="w-1/6 h-[60%] bg-surface-container-highest rounded-t-sm"></div>
-      </div>
-      <div class="text-right">
-        <div class="font-headline-md text-headline-md text-primary font-bold" id="spark-latest" style="font-size:1.25rem">--</div>
-        <div class="text-label-mono text-primary-fixed-variant flex items-center justify-end gap-1" style="font-size:.7rem">
-          <span class="material-symbols-outlined text-[12px]">trending_up</span> Latest discount
+    </div>
+
+    <!-- ANALYTICS -->
+    <div id="section-analytics" class="section-content flex flex-col gap-4">
+      <h2 class="font-bold text-primary" style="font-size:1.1rem">Analytics</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+        <div class="bg-surface border border-outline-variant rounded-lg p-4">
+          <h3 class="font-label-mono text-label-mono uppercase text-on-surface mb-4">Discount Distribution (All Sales)</h3>
+          <div id="disc-chart" class="flex items-end gap-2 h-32 pt-4 border-b border-outline-variant"></div>
+          <div id="disc-labels" class="flex gap-2 mt-2 overflow-hidden justify-between text-[10px] text-on-surface-variant font-label-mono"></div>
+        </div>
+        <div class="bg-surface border border-outline-variant rounded-lg p-4">
+          <h3 class="font-label-mono text-label-mono uppercase text-on-surface mb-4">Category Breakdown</h3>
+          <div id="cat-chart" class="space-y-3"></div>
+        </div>
+        <div class="bg-surface border border-outline-variant rounded-lg p-4">
+          <h3 class="font-label-mono text-label-mono uppercase text-on-surface mb-4">Revenue Per Sale (Last 5)</h3>
+          <div id="rev-chart" class="flex items-end gap-2 h-32 pt-4 border-b border-outline-variant"></div>
+        </div>
+        <div class="bg-surface border border-outline-variant rounded-lg p-4">
+          <h3 class="font-label-mono text-label-mono uppercase text-on-surface mb-4">Session Summary</h3>
+          <div id="analytics-summary" class="space-y-3"></div>
         </div>
       </div>
-    </section>
+    </div>
+
+    <!-- SUSTAINABILITY -->
+    <div id="section-sustainability" class="section-content flex flex-col gap-4">
+      <h2 class="font-bold text-primary" style="font-size:1.1rem">Sustainability Impact</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+        <div class="impact-card flex flex-col gap-2">
+          <span class="material-symbols-outlined text-[32px]">eco</span>
+          <div style="font-size:2.5rem;font-weight:700" id="sust-co2">0</div>
+          <div style="font-size:.8rem;opacity:.7">kg CO&#x2082; Avoided</div>
+          <div style="font-size:.7rem;opacity:.55;font-family:Space Mono,monospace">2.5 kg per meal rescued</div>
+        </div>
+        <div class="impact-card flex flex-col gap-2">
+          <span class="material-symbols-outlined text-[32px]">park</span>
+          <div style="font-size:2.5rem;font-weight:700" id="sust-trees">0</div>
+          <div style="font-size:.8rem;opacity:.7">Trees Worth of CO&#x2082;</div>
+          <div style="font-size:.7rem;opacity:.55;font-family:Space Mono,monospace">22 kg CO&#x2082;/tree/year</div>
+        </div>
+        <div class="impact-card flex flex-col gap-2">
+          <span class="material-symbols-outlined text-[32px]">directions_car</span>
+          <div style="font-size:2.5rem;font-weight:700" id="sust-km">0</div>
+          <div style="font-size:.8rem;opacity:.7">km Not Driven (equiv.)</div>
+          <div style="font-size:.7rem;opacity:.55;font-family:Space Mono,monospace">0.21 kg CO&#x2082;/km</div>
+        </div>
+      </div>
+      <div class="bg-surface border border-outline-variant rounded-lg p-4">
+        <h3 class="font-label-mono text-label-mono uppercase text-on-surface mb-4">Meals Rescued by Category</h3>
+        <div id="sust-breakdown" class="space-y-3"></div>
+      </div>
+      <div class="bg-surface-container-low border border-outline-variant rounded-lg p-4 flex items-start gap-3">
+        <span class="material-symbols-outlined text-primary text-[20px]">info</span>
+        <p class="text-body-md text-on-surface-variant">CO&#x2082; estimate: ~2.5 kg CO&#x2082;e avoided per meal rescued from landfill (published lifecycle analysis). Figures are indicative and suitable for demo and impact reporting.</p>
+      </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div id="section-support" class="section-content flex flex-col gap-4">
+      <h2 class="font-bold text-primary" style="font-size:1.1rem">Support & FAQ</h2>
+      <div class="bg-surface border border-outline-variant rounded-lg divide-y divide-outline-variant">
+        <details class="p-4 group">
+          <summary class="font-label-sm text-label-sm uppercase cursor-pointer flex justify-between items-center list-none">
+            <span>How is the AI price calculated?</span>
+            <span class="material-symbols-outlined text-[18px] text-on-surface-variant group-open:rotate-180 transition-transform">expand_more</span>
+          </summary>
+          <p class="text-body-md text-on-surface-variant mt-3">EcoPlate weighs: (1) Time urgency — fewer hours = steeper discount, (2) Inventory pressure — more portions = higher urgency signal, (3) Perishability risk — Dairy/Cooked get +5-12% multiplier. Final price includes +-4% variance to model real-time demand.</p>
+        </details>
+        <details class="p-4 group">
+          <summary class="font-label-sm text-label-sm uppercase cursor-pointer flex justify-between items-center list-none">
+            <span>What does Publish & Broadcast do?</span>
+            <span class="material-symbols-outlined text-[18px] text-on-surface-variant group-open:rotate-180 transition-transform">expand_more</span>
+          </summary>
+          <p class="text-body-md text-on-surface-variant mt-3">Adds the deal to the live consumer feed at localhost:5000, copies broadcast text to clipboard, and updates the impact stats. Consumers can then claim the deal.</p>
+        </details>
+        <details class="p-4 group">
+          <summary class="font-label-sm text-label-sm uppercase cursor-pointer flex justify-between items-center list-none">
+            <span>What is the AI Rewrite button?</span>
+            <span class="material-symbols-outlined text-[18px] text-on-surface-variant group-open:rotate-180 transition-transform">expand_more</span>
+          </summary>
+          <p class="text-body-md text-on-surface-variant mt-3">Sends your item details to GPT-4o-mini which generates a more compelling, creative, human-sounding broadcast message — replacing the default template copy.</p>
+        </details>
+        <details class="p-4 group">
+          <summary class="font-label-sm text-label-sm uppercase cursor-pointer flex justify-between items-center list-none">
+            <span>Can I delete a published deal?</span>
+            <span class="material-symbols-outlined text-[18px] text-on-surface-variant group-open:rotate-180 transition-transform">expand_more</span>
+          </summary>
+          <p class="text-body-md text-on-surface-variant mt-3">Yes — go to Inventory and click Delete next to any sale. It is removed from the live feed immediately.</p>
+        </details>
+      </div>
+      <div class="bg-surface border border-outline-variant rounded-lg p-6 text-center">
+        <span class="material-symbols-outlined text-primary text-[40px] mb-2 block">mail</span>
+        <p class="text-body-md text-on-surface-variant">Hackathon support: <strong>team@ecoplate.in</strong></p>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="section-settings" class="section-content flex flex-col gap-4">
+      <h2 class="font-bold text-primary" style="font-size:1.1rem">Vendor Settings</h2>
+      <div class="bg-surface border border-outline-variant rounded-lg p-6 space-y-4">
+        <h3 class="font-label-mono text-label-mono uppercase text-on-surface">Vendor Profile</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-1"><label class="font-label-sm text-label-sm text-on-surface-variant block">Restaurant Name</label><input id="set-name" class="w-full bg-surface-bright border border-outline-variant rounded px-3 py-2 text-body-md focus:outline-none focus:border-primary" value="Hotel Abad Plaza"/></div>
+          <div class="space-y-1"><label class="font-label-sm text-label-sm text-on-surface-variant block">Contact Email</label><input id="set-email" class="w-full bg-surface-bright border border-outline-variant rounded px-3 py-2 text-body-md focus:outline-none focus:border-primary" value="manager@abadplaza.in" type="email"/></div>
+          <div class="space-y-1"><label class="font-label-sm text-label-sm text-on-surface-variant block">City</label><input id="set-city" class="w-full bg-surface-bright border border-outline-variant rounded px-3 py-2 text-body-md focus:outline-none focus:border-primary" value="Thiruvananthapuram"/></div>
+          <div class="space-y-1"><label class="font-label-sm text-label-sm text-on-surface-variant block">FSSAI License No.</label><input id="set-license" class="w-full bg-surface-bright border border-outline-variant rounded px-3 py-2 text-body-md focus:outline-none focus:border-primary" value="11222334455667"/></div>
+        </div>
+        <hr class="border-outline-variant"/>
+        <h3 class="font-label-mono text-label-mono uppercase text-on-surface">Pricing Preferences</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-1"><label class="font-label-sm text-label-sm text-on-surface-variant block">Max Discount Cap (%)</label><input id="set-max" class="w-full bg-surface-bright border border-outline-variant rounded px-3 py-2 text-body-md focus:outline-none focus:border-primary" value="80" type="number"/></div>
+          <div class="space-y-1"><label class="font-label-sm text-label-sm text-on-surface-variant block">Min Discount Floor (%)</label><input id="set-min" class="w-full bg-surface-bright border border-outline-variant rounded px-3 py-2 text-body-md focus:outline-none focus:border-primary" value="15" type="number"/></div>
+        </div>
+        <div class="flex justify-end">
+          <button onclick="saveSettings()" class="bg-primary text-on-primary px-6 py-2 rounded font-label-sm text-label-sm uppercase tracking-wider hover:bg-surface-tint btn-active">Save Settings</button>
+        </div>
+      </div>
+    </div>
 
   </div>
 </main>
 
-<!-- Mobile Bottom Nav -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 bg-surface border-t border-outline-variant z-50 rounded-t-xl shadow-sm">
-  <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors p-2" href="/">
-    <span class="material-symbols-outlined">home</span>
-    <span class="font-label-sm text-label-sm mt-1">Home</span>
-  </a>
-  <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors p-2" href="#">
-    <span class="material-symbols-outlined">list_alt</span>
-    <span class="font-label-sm text-label-sm mt-1">Inventory</span>
-  </a>
-  <a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1" href="#">
-    <span class="material-symbols-outlined">local_offer</span>
-    <span class="font-label-sm text-label-sm mt-1">Deals</span>
-  </a>
-  <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors p-2" href="#">
-    <span class="material-symbols-outlined">bar_chart</span>
-    <span class="font-label-sm text-label-sm mt-1">Stats</span>
-  </a>
-</nav>
-
-<!-- Toast -->
 <div id="toast" class="toast bg-surface border border-outline-variant rounded-lg px-4 py-3 flex items-center gap-2 max-w-xs shadow-lg">
   <span id="toast-icon">&#x2705;</span>
   <span id="toast-msg" class="font-label-sm text-label-sm text-on-surface"></span>
 </div>
+
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-2 py-2 bg-surface border-t border-outline-variant z-20">
+  <a class="flex flex-col items-center text-on-surface-variant p-1" onclick="goSection('dashboard')" style="cursor:pointer"><span class="material-symbols-outlined text-[22px]">dashboard</span><span class="font-label-sm text-label-sm">Home</span></a>
+  <a class="flex flex-col items-center text-on-surface-variant p-1" onclick="goSection('inventory')" style="cursor:pointer"><span class="material-symbols-outlined text-[22px]">inventory_2</span><span class="font-label-sm text-label-sm">Stock</span></a>
+  <a class="flex flex-col items-center bg-primary-container text-on-primary-container rounded-full px-3 py-1" onclick="goSection('dashboard');focusForm()" style="cursor:pointer"><span class="material-symbols-outlined text-[22px]">add_circle</span><span class="font-label-sm text-label-sm">Add</span></a>
+  <a class="flex flex-col items-center text-on-surface-variant p-1" onclick="goSection('analytics')" style="cursor:pointer"><span class="material-symbols-outlined text-[22px]">monitoring</span><span class="font-label-sm text-label-sm">Stats</span></a>
+  <a class="flex flex-col items-center text-on-surface-variant p-1" onclick="goSection('sustainability')" style="cursor:pointer"><span class="material-symbols-outlined text-[22px]">eco</span><span class="font-label-sm text-label-sm">Impact</span></a>
+</nav>
 
 <script src="/static/js/vendor.js"></script>
 </body>

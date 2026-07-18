@@ -1,0 +1,5 @@
+ecoplate/.env
+__pycache__/
+*.pyc
+.DS_Store
+ecoplate/__pycache__/
