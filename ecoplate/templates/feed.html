@@ -1,202 +1,635 @@
-﻿<!DOCTYPE html>
-<html class="dark" lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>EcoPlate Live — Consumer Feed</title>
-<meta name="description" content="EcoPlate Live Feed — Discover surplus food deals near you in Thiruvananthapuram. Save money, reduce waste." />
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-  tailwind.config = {
-    darkMode: "class",
-    theme: {
-      extend: {
-        "colors": {
-          "on-secondary-fixed": "#410000",
-          "primary-fixed": "#beedd7",
-          "surface-tint": "#3b6756",
-          "on-secondary-fixed-variant": "#930002",
-          "on-tertiary-fixed-variant": "#214f41",
-          "surface-variant": "#e1e3e3",
-          "surface-dim": "#d9dada",
-          "error-container": "#ffdad6",
-          "on-secondary-container": "#fffbff",
-          "primary-fixed-dim": "#a2d1bb",
-          "on-primary": "#ffffff",
-          "on-surface": "#191c1c",
-          "on-tertiary-fixed": "#002118",
-          "surface-container-high": "#e7e8e8",
-          "inverse-primary": "#a2d1bb",
-          "on-background": "#191c1c",
-          "on-tertiary-container": "#7aa897",
-          "on-primary-fixed-variant": "#234f3f",
-          "on-error-container": "#93000a",
-          "on-secondary": "#ffffff",
-          "on-tertiary": "#ffffff",
-          "outline": "#717974",
-          "secondary-container": "#dc3225",
-          "tertiary": "#00261c",
-          "primary-container": "#0f3d2e",
-          "surface-container-low": "#f3f4f4",
-          "tertiary-fixed": "#bcedda",
-          "tertiary-fixed-dim": "#a1d1bf",
-          "primary": "#00261a",
-          "error": "#ba1a1a",
-          "on-error": "#ffffff",
-          "on-surface-variant": "#414944",
-          "inverse-surface": "#2e3131",
-          "on-primary-fixed": "#002116",
-          "surface-container-highest": "#e1e3e3",
-          "outline-variant": "#c0c8c3",
-          "surface": "#f8f9f9",
-          "surface-container-lowest": "#ffffff",
-          "secondary-fixed": "#ffdad5",
-          "surface-bright": "#f8f9f9",
-          "background": "#f8f9f9",
-          "secondary": "#b8130e",
-          "inverse-on-surface": "#f0f1f1",
-          "secondary-fixed-dim": "#ffb4a9",
-          "on-primary-container": "#7ba894",
-          "surface-container": "#edeeee",
-          "tertiary-container": "#0c3d30"
-        },
-        "borderRadius": {
-          "DEFAULT": "0.125rem",
-          "lg": "0.25rem",
-          "xl": "0.5rem",
-          "full": "0.75rem"
-        },
-        "spacing": {
-          "stack-gap-sm": "8px",
-          "stack-gap-lg": "32px",
-          "container-padding": "24px",
-          "gutter": "16px",
-          "stack-gap-md": "16px",
-          "sidebar-width": "260px",
-          "unit": "4px"
-        },
-        "fontFamily": {
-          "label-sm": ["Geist"],
-          "display-metrics": ["Geist"],
-          "headline-md": ["Geist"],
-          "headline-lg-mobile": ["Geist"],
-          "body-md": ["Geist"],
-          "headline-lg": ["Geist"],
-          "body-lg": ["Geist"],
-          "label-mono": ["Space Mono"]
-        },
-        "fontSize": {
-          "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600"}],
-          "display-metrics": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-          "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-          "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-          "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
-          "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-          "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-          "label-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
-        }
-      },
-    },
-  }
-</script>
+<title>EcoPlate Live — Surplus Food Near You</title>
+<meta name="description" content="EcoPlate Live Feed — Discover surplus food deals near you in Thiruvananthapuram. Save money, reduce waste."/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
 <style>
-    body { background-color: #0f172a; color: #f8fafc; }
-    .pulse-dot { animation: pulse 2s infinite; }
-    @keyframes pulse {
-        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-        70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
-        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
-    }
-    .pulse-text { animation: pulse-text 2s infinite; }
-    @keyframes pulse-text { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
-    .hide-scrollbar::-webkit-scrollbar { display: none; }
-    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .countdown.urgent { animation: pulse-text 1s step-start infinite; color: #ef4444; }
-    #claim-modal { display: none; }
-    #claim-modal.open { display: flex; }
-</style>
-<style>body { min-height: max(884px, 100dvh); }</style>
-</head>
-<body class="antialiased pb-24 font-body-md">
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<!-- Header -->
-<header class="sticky top-0 z-40 bg-[#0f172a]/90 backdrop-blur-md border-b border-outline/20 px-4 py-3">
-  <div class="flex items-center justify-between">
-    <div class="flex flex-col gap-1">
-      <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary-fixed font-bold tracking-tight">EcoPlate Live</h1>
-      <div class="flex items-center gap-2">
-        <span class="material-symbols-outlined text-[16px] text-outline">location_on</span>
-        <span class="font-label-sm text-label-sm text-surface-variant uppercase tracking-wider">Thiruvananthapuram</span>
+  :root {
+    --bg:        #0a0f1a;
+    --surface:   #111827;
+    --surface2:  #1a2235;
+    --surface3:  #1e2d42;
+    --border:    rgba(255,255,255,0.07);
+    --border2:   rgba(255,255,255,0.12);
+    --text:      #f0f4ff;
+    --text-sub:  #94a3b8;
+    --text-dim:  #4b5a6e;
+    --green:     #22c55e;
+    --green-dim: #16a34a;
+    --amber:     #f59e0b;
+    --red:       #ef4444;
+    --accent:    #38bdf8;
+    --accent2:   #818cf8;
+    --grad1:     linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+    --grad-green:linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    --shadow:    0 4px 24px rgba(0,0,0,0.4);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.6);
+    --radius:    16px;
+    --radius-sm: 10px;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100dvh;
+    padding-bottom: 100px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky; top: 0; z-index: 40;
+    background: rgba(10,15,26,0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 16px 0;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .logo-row { display: flex; flex-direction: column; gap: 2px; }
+  .logo {
+    font-size: 22px; font-weight: 800;
+    background: var(--grad1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+  .logo-leaf { display: inline-block; margin-right: 2px; }
+  .location-row {
+    display: flex; align-items: center; gap: 4px;
+    color: var(--text-sub); font-size: 11px; font-weight: 500;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .location-row .material-symbols-rounded { font-size: 13px; }
+
+  .vendor-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--text); font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 600;
+    padding: 7px 14px; border-radius: 99px;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .vendor-btn:hover {
+    background: var(--surface3);
+    border-color: rgba(56,189,248,0.4);
+    color: var(--accent);
+  }
+  .vendor-btn .material-symbols-rounded { font-size: 15px; }
+
+  /* Live badge row */
+  .header-bottom {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 12px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .header-bottom::-webkit-scrollbar { display: none; }
+
+  .live-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.25);
+    padding: 5px 12px; border-radius: 99px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .pulse-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green);
+    animation: pulse-glow 2s ease infinite;
+  }
+  @keyframes pulse-glow {
+    0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
+    70%  { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+    100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+  }
+  .live-badge span.count-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--green); font-weight: 700;
+  }
+
+  .stat-pill {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 5px 12px; border-radius: 99px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .stat-pill .material-symbols-rounded { font-size: 14px; color: var(--amber); }
+  .stat-pill span.val { font-size: 11px; color: var(--text-sub); font-weight: 500; }
+  .stat-pill span.label { font-size: 10px; color: var(--text-dim); }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    display: flex; gap: 8px; padding: 14px 16px;
+    overflow-x: auto; scrollbar-width: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+
+  .chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 99px;
+    font-size: 12px; font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    border: 1px solid var(--border2);
+    background: var(--surface2);
+    color: var(--text-sub);
+    cursor: pointer; white-space: nowrap;
+    transition: all 0.2s ease; flex-shrink: 0;
+  }
+  .chip .material-symbols-rounded { font-size: 15px; }
+  .chip:hover { background: var(--surface3); color: var(--text); border-color: var(--border2); }
+  .chip.active {
+    background: var(--grad1);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(56,189,248,0.3);
+  }
+
+  /* ── SECTION HEADING ── */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 16px 10px;
+  }
+  .section-title {
+    font-size: 13px; font-weight: 700;
+    color: var(--text-sub); text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .refresh-btn {
+    display: flex; align-items: center; gap: 4px;
+    background: none; border: none;
+    color: var(--accent); font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 600;
+    cursor: pointer; padding: 4px 8px; border-radius: 8px;
+    transition: all 0.2s;
+  }
+  .refresh-btn:hover { background: rgba(56,189,248,0.1); }
+  .refresh-btn .material-symbols-rounded { font-size: 15px; }
+
+  /* ── DEALS GRID ── */
+  #deals-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 0 16px 16px;
+  }
+  @media (min-width: 640px) {
+    #deals-list { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 1024px) {
+    #deals-list { grid-template-columns: 1fr 1fr 1fr; max-width: 1100px; margin: 0 auto; }
+  }
+
+  /* ── CARD ── */
+  .deal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    animation: card-in 0.4s ease both;
+  }
+  .deal-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border2);
+  }
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .deal-card.expired { opacity: 0.45; pointer-events: none; }
+
+  /* card image */
+  .card-img-wrap {
+    position: relative; width: 100%; height: 160px; overflow: hidden;
+    background: var(--surface2);
+  }
+  .card-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .deal-card:hover .card-img-wrap img { transform: scale(1.04); }
+  .img-fallback {
+    position: absolute; inset: 0;
+    display: none; align-items: center; justify-content: center;
+    font-size: 52px;
+    background: linear-gradient(135deg, var(--surface2), var(--surface3));
+  }
+  .card-gradient {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(10,15,26,0.85) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* badges on image */
+  .badge-discount {
+    position: absolute; top: 10px; left: 10px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff; font-size: 11px; font-weight: 800;
+    padding: 4px 10px; border-radius: 99px;
+    display: flex; align-items: center; gap: 4px;
+    box-shadow: 0 2px 8px rgba(239,68,68,0.4);
+    letter-spacing: 0.02em;
+  }
+  .badge-discount .material-symbols-rounded { font-size: 13px; }
+
+  .badge-peri {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(10,15,26,0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-sub); font-size: 10px; font-weight: 600;
+    padding: 4px 9px; border-radius: 99px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+
+  .badge-expired-overlay {
+    position: absolute; inset: 0;
+    background: rgba(10,15,26,0.65);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .badge-expired-overlay span {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: #fff; background: rgba(0,0,0,0.6);
+    padding: 6px 16px; border-radius: 99px;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  /* card body */
+  .card-body { padding: 14px; }
+
+  .card-top {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 10px;
+    margin-bottom: 12px;
+  }
+  .card-name {
+    font-size: 15px; font-weight: 700;
+    color: var(--text); line-height: 1.3;
+    margin-bottom: 3px;
+  }
+  .card-vendor {
+    display: flex; align-items: center; gap: 4px;
+    color: var(--text-sub); font-size: 11px; font-weight: 500;
+  }
+  .card-vendor .material-symbols-rounded { font-size: 13px; color: var(--text-dim); }
+
+  .card-price-block { text-align: right; flex-shrink: 0; }
+  .price-now {
+    font-size: 22px; font-weight: 800;
+    color: var(--green); line-height: 1;
+    margin-bottom: 2px;
+  }
+  .price-was {
+    font-size: 11px; color: var(--text-dim);
+    text-decoration: line-through;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* card meta row */
+  .card-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    margin-bottom: 12px;
+  }
+  .meta-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600;
+    color: var(--text-sub);
+  }
+  .meta-item .material-symbols-rounded { font-size: 15px; }
+  .meta-item.live .material-symbols-rounded { color: var(--amber); }
+  .meta-item.live .countdown { color: var(--amber); font-family: 'Space Mono', monospace; }
+  .meta-item.live .countdown.urgent { color: var(--red); animation: flash 1s step-start infinite; }
+  @keyframes flash { 50% { opacity: 0.3; } }
+  .meta-divider { width: 1px; height: 20px; background: var(--border); }
+
+  /* claim button */
+  .claim-btn {
+    width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--grad1);
+    color: #fff; border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 700;
+    padding: 12px 0; border-radius: var(--radius-sm);
+    cursor: pointer; letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 12px rgba(56,189,248,0.25);
+  }
+  .claim-btn:hover {
+    box-shadow: 0 4px 20px rgba(56,189,248,0.4);
+    transform: translateY(-1px);
+  }
+  .claim-btn:active { transform: translateY(0); }
+  .claim-btn .material-symbols-rounded { font-size: 18px; }
+  .claim-btn.disabled {
+    background: var(--surface2);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    box-shadow: none; cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ── SAVINGS BANNER ── */
+  .savings-banner {
+    margin: 0 16px 16px;
+    background: linear-gradient(135deg, rgba(34,197,94,0.1) 0%, rgba(16,163,74,0.05) 100%);
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .savings-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(34,197,94,0.15);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .savings-icon .material-symbols-rounded { font-size: 20px; color: var(--green); }
+  .savings-text { flex: 1; }
+  .savings-text .title { font-size: 12px; font-weight: 700; color: var(--green); margin-bottom: 1px; }
+  .savings-text .sub { font-size: 11px; color: var(--text-sub); }
+
+  /* ── EMPTY STATE ── */
+  #empty-state {
+    display: none;
+    flex-direction: column; align-items: center;
+    justify-content: center;
+    margin: 32px 16px;
+    padding: 48px 24px;
+    background: var(--surface);
+    border: 1px dashed var(--border2);
+    border-radius: var(--radius);
+    text-align: center;
+  }
+  #empty-state .material-symbols-rounded { font-size: 48px; color: var(--text-dim); margin-bottom: 16px; }
+  #empty-state h3 { font-size: 16px; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; }
+  #empty-state p { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+    background: rgba(17,24,39,0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 10px 0 max(10px, env(safe-area-inset-bottom));
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 3px; padding: 4px 16px;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-dim); font-family: 'Inter', sans-serif;
+    transition: color 0.2s;
+    text-decoration: none;
+  }
+  .nav-item .material-symbols-rounded { font-size: 22px; }
+  .nav-item span.label { font-size: 10px; font-weight: 600; letter-spacing: 0.04em; }
+  .nav-item.active { color: var(--accent); }
+  .nav-item:hover { color: var(--text); }
+
+  /* ── MODAL ── */
+  #claim-modal {
+    display: none; position: fixed; inset: 0; z-index: 60;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    align-items: flex-end; justify-content: center;
+    padding: 0;
+    animation: fade-in 0.2s ease;
+  }
+  #claim-modal.open { display: flex; }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal-sheet {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-bottom: none;
+    border-radius: 24px 24px 0 0;
+    width: 100%; max-width: 480px;
+    padding: 0 0 max(24px, env(safe-area-inset-bottom));
+    animation: slide-up 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+  }
+  @media (min-width: 640px) {
+    #claim-modal { align-items: center; padding: 16px; }
+    .modal-sheet { border-bottom: 1px solid var(--border2); border-radius: 24px; }
+  }
+  @keyframes slide-up {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  .modal-handle {
+    width: 36px; height: 4px; border-radius: 99px;
+    background: var(--border2); margin: 12px auto 20px;
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text-sub); border-radius: 50%;
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .modal-close:hover { background: var(--surface3); color: var(--text); }
+  .modal-close .material-symbols-rounded { font-size: 16px; }
+
+  .modal-content { padding: 0 20px 20px; }
+  .modal-success-icon {
+    width: 56px; height: 56px; border-radius: 16px;
+    background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(16,163,74,0.1));
+    border: 1px solid rgba(34,197,94,0.3);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+  }
+  .modal-success-icon .material-symbols-rounded { font-size: 28px; color: var(--green); }
+  .modal-title { font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 4px; }
+  .modal-subtitle { font-size: 13px; color: var(--text-sub); text-align: center; margin-bottom: 20px; line-height: 1.5; }
+
+  .qr-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    width: 160px; height: 160px;
+  }
+  .qr-box .material-symbols-rounded { font-size: 100px; color: #111; }
+
+  .modal-instruction {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(56,189,248,0.06);
+    border: 1px solid rgba(56,189,248,0.2);
+    border-radius: 12px; padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .modal-instruction .material-symbols-rounded { font-size: 18px; color: var(--accent); flex-shrink: 0; }
+  .modal-instruction p { font-size: 12px; font-weight: 600; color: var(--text-sub); line-height: 1.5; }
+
+  .modal-order-id {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--text-dim);
+    text-align: center; letter-spacing: 0.08em;
+  }
+
+  /* Spinner for refresh */
+  .spin { animation: spin 0.8s linear infinite; display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-top">
+    <div class="logo-row">
+      <div class="logo"><span class="logo-leaf">🌿</span>EcoPlate Live</div>
+      <div class="location-row">
+        <span class="material-symbols-rounded">location_on</span>
+        Thiruvananthapuram
       </div>
     </div>
-    <a href="/vendor" class="font-label-sm text-label-sm text-primary-fixed-dim border border-outline/30 px-3 py-1.5 rounded-full hover:bg-[#1e293b] transition-colors">Vendor Portal →</a>
+    <a href="/vendor" class="vendor-btn">
+      <span class="material-symbols-rounded">storefront</span>
+      Vendor Portal
+    </a>
   </div>
-  <div class="mt-3 flex items-center gap-2 bg-[#1e293b] rounded-full px-3 py-1.5 w-fit border border-outline/10">
-    <div class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></div>
-    <span class="font-label-mono text-label-mono text-primary-fixed-dim"><span id="deal-count">0</span> deals live now</span>
+  <div class="header-bottom">
+    <div class="live-badge">
+      <div class="pulse-dot"></div>
+      <span class="count-text"><span id="deal-count">0</span> deals live</span>
+    </div>
+    <div class="stat-pill">
+      <span class="material-symbols-rounded">eco</span>
+      <span class="val" id="stat-meals">–</span>&nbsp;<span class="label">meals saved</span>
+    </div>
+    <div class="stat-pill">
+      <span class="material-symbols-rounded" style="color:#22c55e">co2</span>
+      <span class="val" id="stat-co2">–</span>&nbsp;<span class="label">kg CO₂</span>
+    </div>
   </div>
 </header>
 
-<!-- Filter Bar -->
-<div class="px-4 py-4 hide-scrollbar overflow-x-auto whitespace-nowrap border-b border-outline/10">
-  <div class="flex gap-2">
-    <button id="chip-all" class="bg-primary text-on-primary border border-primary-container px-4 py-2 rounded-full font-label-sm text-label-sm hover:bg-primary-container transition-colors">All Deals</button>
-    <button id="chip-ending" class="bg-[#1e293b] text-surface-variant border border-outline/20 px-4 py-2 rounded-full font-label-sm text-label-sm hover:bg-[#1e293b]/80 transition-colors">Ending Soon</button>
-    <button id="chip-discount" class="bg-[#1e293b] text-surface-variant border border-outline/20 px-4 py-2 rounded-full font-label-sm text-label-sm hover:bg-[#1e293b]/80 transition-colors">Biggest Discount</button>
+<!-- ── FILTER BAR ── -->
+<div class="filter-bar">
+  <button class="chip active" id="chip-all">
+    <span class="material-symbols-rounded">local_offer</span>All Deals
+  </button>
+  <button class="chip" id="chip-ending">
+    <span class="material-symbols-rounded">timer</span>Ending Soon
+  </button>
+  <button class="chip" id="chip-discount">
+    <span class="material-symbols-rounded">local_fire_department</span>Top Discounts
+  </button>
+  <button class="chip" id="chip-cooked">🍲 Cooked</button>
+  <button class="chip" id="chip-bakery">🥐 Bakery</button>
+  <button class="chip" id="chip-produce">🥬 Produce</button>
+  <button class="chip" id="chip-dairy">🥛 Dairy</button>
+</div>
+
+<!-- ── SAVINGS BANNER ── -->
+<div class="savings-banner" id="savings-banner">
+  <div class="savings-icon"><span class="material-symbols-rounded">savings</span></div>
+  <div class="savings-text">
+    <div class="title">Community savings today</div>
+    <div class="sub" id="savings-text-sub">Loading stats…</div>
   </div>
 </div>
 
-<!-- Main Content -->
-<main class="p-4 space-y-4">
-  <div id="deals-list"></div>
-  <div id="empty-state" style="display:none" class="flex flex-col items-center justify-center py-12 px-4 text-center border border-dashed border-outline/20 rounded-xl bg-[#1e293b]/50">
-    <span class="material-symbols-outlined text-4xl text-outline mb-4">search_off</span>
-    <h3 class="font-headline-md text-headline-md text-surface-variant mb-2" style="font-size:1.1rem">No active deals right now</h3>
-    <p class="font-body-md text-body-md text-outline">Check back soon — restaurants update regularly.</p>
-  </div>
-</main>
+<!-- ── SECTION HEADING ── -->
+<div class="section-header">
+  <span class="section-title">Available Now</span>
+  <button class="refresh-btn" id="refresh-btn" onclick="manualRefresh()">
+    <span class="material-symbols-rounded" id="refresh-icon">refresh</span>Refresh
+  </button>
+</div>
 
-<!-- Bottom Navigation -->
-<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-[#0f172a] shadow-[0_-4px_12px_rgba(0,0,0,0.2)] md:hidden flex justify-around items-center px-4 py-2">
-  <button class="flex flex-col items-center justify-center text-primary-fixed-dim">
-    <span class="material-symbols-outlined">home</span>
-    <span class="font-label-sm text-label-sm">Home</span>
-  </button>
-  <button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary-fixed transition-colors">
-    <span class="material-symbols-outlined">list_alt</span>
-    <span class="font-label-sm text-label-sm">Inventory</span>
-  </button>
-  <button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1">
-    <span class="material-symbols-outlined text-primary-fixed">local_offer</span>
-    <span class="font-label-sm text-label-sm text-primary-fixed">Deals</span>
-  </button>
-  <button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary-fixed transition-colors">
-    <span class="material-symbols-outlined">bar_chart</span>
-    <span class="font-label-sm text-label-sm">Stats</span>
-  </button>
+<!-- ── DEALS GRID ── -->
+<div id="deals-list"></div>
+
+<!-- ── EMPTY STATE ── -->
+<div id="empty-state">
+  <span class="material-symbols-rounded">sentiment_dissatisfied</span>
+  <h3>No active deals right now</h3>
+  <p>Vendors are busy prepping! Check back in a few minutes — surplus food goes fast. 🍽️</p>
+</div>
+
+<!-- ── BOTTOM NAV ── -->
+<nav class="bottom-nav">
+  <a class="nav-item active" href="/">
+    <span class="material-symbols-rounded">home</span>
+    <span class="label">Home</span>
+  </a>
+  <a class="nav-item" href="#">
+    <span class="material-symbols-rounded">explore</span>
+    <span class="label">Explore</span>
+  </a>
+  <a class="nav-item" href="#">
+    <span class="material-symbols-rounded">receipt_long</span>
+    <span class="label">Orders</span>
+  </a>
+  <a class="nav-item" href="#">
+    <span class="material-symbols-rounded">person</span>
+    <span class="label">Profile</span>
+  </a>
 </nav>
 
-<!-- Claim Modal -->
-<div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4" id="claim-modal">
-  <div class="bg-[#1e293b] w-full sm:w-96 rounded-t-2xl sm:rounded-2xl shadow-xl border border-outline/10 flex flex-col items-center p-6 relative">
-    <div class="w-12 h-1.5 bg-outline/30 rounded-full mb-6 sm:hidden"></div>
-    <button class="absolute top-4 right-4 text-outline hover:text-surface-variant" id="close-modal">
-      <span class="material-symbols-outlined">close</span>
+<!-- ── CLAIM MODAL ── -->
+<div id="claim-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" id="close-modal">
+      <span class="material-symbols-rounded">close</span>
     </button>
-    <h3 class="font-headline-md text-headline-md text-white mb-2 font-semibold" style="font-size:1.1rem">Deal Claimed!</h3>
-    <p class="font-body-md text-body-md text-surface-variant mb-6 text-center" id="modal-item-name">Item at Vendor</p>
-    <div class="bg-white p-4 rounded-xl mb-6 shadow-inner w-48 h-48 flex items-center justify-center">
-      <span class="material-symbols-outlined text-6xl text-gray-400">qr_code_2</span>
+    <div class="modal-content">
+      <div class="modal-success-icon">
+        <span class="material-symbols-rounded">check_circle</span>
+      </div>
+      <div class="modal-title">Deal Claimed! 🎉</div>
+      <p class="modal-subtitle" id="modal-item-name">Item at Vendor</p>
+
+      <div class="qr-box">
+        <span class="material-symbols-rounded">qr_code_2</span>
+      </div>
+
+      <div class="modal-instruction">
+        <span class="material-symbols-rounded">qr_code_scanner</span>
+        <p>Show this QR code at the counter. Staff will scan it to confirm your pickup.</p>
+      </div>
+      <p class="modal-order-id" id="modal-order-id">Order ID: #ECP-0000</p>
     </div>
-    <div class="flex items-center gap-3 bg-primary-container/30 px-4 py-3 rounded-lg border border-primary/20 w-full mb-4">
-      <span class="material-symbols-outlined text-primary-fixed">qr_code_scanner</span>
-      <span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider">Scan at counter to pick up</span>
-    </div>
-    <p class="font-label-mono text-label-mono text-outline" id="modal-order-id">Order ID: #ECP-0000</p>
   </div>
 </div>
 
