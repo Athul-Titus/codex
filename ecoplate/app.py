@@ -24,18 +24,57 @@ SESSION_STATS = {"revenue_recovered": 0.0, "meals_saved": 0, "co2_avoided": 0.0}
 # ── PERISHABILITY MULTIPLIERS ──────────────────────────────────────────────────
 PERI_MULT = {"Dairy": 1.12, "Cooked": 1.08, "Bakery": 1.0, "Produce": 1.0}
 
-# ── MOCK ML ────────────────────────────────────────────────────────────────────
-def calculate_optimal_price(original_price, qty, hours_left, perishability="Cooked"):
-    if original_price <= 0 or qty <= 0:
-        return (original_price, 0.0, 82)
-    time_factor   = max(0.0, 1.0 - min(hours_left, 3.0) / 3.0)
-    qty_factor    = min(qty, 40) / 40.0
-    urgency       = time_factor * 0.65 + qty_factor * 0.35
-    base_discount = urgency * 75.0 * PERI_MULT.get(perishability, 1.0)
-    base_discount += random.uniform(-4.0, 4.0)
-    discount_pct  = round(max(15.0, min(80.0, base_discount)), 1)
-    suggested_price  = round(original_price * (1.0 - discount_pct / 100.0), 2)
-    return (suggested_price, discount_pct, random.randint(82, 96))
+# ── DYNAMIC PRICING ENGINE (AI-Powered) ────────────────────────────────────────
+def calculate_optimal_price(original_price, qty, hours_left, perishability="Cooked", item="Food Item"):
+    def fallback():
+        time_factor   = max(0.0, 1.0 - min(hours_left, 3.0) / 3.0)
+        qty_factor    = min(qty, 40) / 40.0
+        urgency       = time_factor * 0.65 + qty_factor * 0.35
+        base_discount = urgency * 75.0 * PERI_MULT.get(perishability, 1.0)
+        base_discount += random.uniform(-4.0, 4.0)
+        discount_pct  = round(max(15.0, min(80.0, base_discount)), 1)
+        suggested_price  = round(original_price * (1.0 - discount_pct / 100.0), 2)
+        return (suggested_price, discount_pct, random.randint(82, 96))
+
+    if not _oai or original_price <= 0 or qty <= 0:
+        return fallback()
+
+    try:
+        prompt = (
+            f"Determine the optimal surplus clearance price for the following item:\n"
+            f"- Name: {item}\n"
+            f"- Original Retail Price: Rs. {original_price}\n"
+            f"- Quantity available: {qty}\n"
+            f"- Hours left until closure: {hours_left} hours\n"
+            f"- Food perishability type: {perishability}\n\n"
+            f"Rules:\n"
+            f"1. Output a reasonable dynamic discount between 15% and 85% off the retail price.\n"
+            f"2. Highly perishable items (Cooked, Dairy) or items with <1.5 hours left should get steeper discounts.\n"
+            f"3. Return ONLY a JSON object with keys: 'suggested_price' (float), 'discount_pct' (float), 'confidence_score' (int, 1-100)."
+        )
+        resp = _oai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a professional retail and dynamic pricing algorithm. Output ONLY a valid JSON object."},
+                {"role": "user", "content": prompt}
+            ],
+            response_format={"type": "json_object"},
+            max_tokens=100,
+            temperature=0.2
+        )
+        import json
+        res = json.loads(resp.choices[0].message.content.strip())
+        sp = float(res["suggested_price"])
+        disc = float(res["discount_pct"])
+        conf = int(res["confidence_score"])
+        
+        # Validation checks
+        if sp <= 0 or sp >= original_price:
+            return fallback()
+        return (round(sp, 2), round(disc, 1), max(1, min(100, conf)))
+    except Exception as e:
+        print("AI Pricing Error:", e)
+        return fallback()
 
 # ── SEED DATA ──────────────────────────────────────────────────────────────────
 def _seed(item, vendor, qty, orig, disc, hrs, peri):
@@ -82,7 +121,7 @@ def api_calculate():
     if not item: return jsonify({"error": "Item name required."}), 400
     if qty<=0:   return jsonify({"error": "Quantity must be >0."}), 400
     if orig<=0:  return jsonify({"error": "Price must be >0."}), 400
-    sp, disc, conf = calculate_optimal_price(orig, qty, hrs, peri)
+    sp, disc, conf = calculate_optimal_price(orig, qty, hrs, peri, item=item)
     rev  = round(sp * qty, 2)
     tlbl = "30 min" if hrs<=0.5 else ("1 hr" if hrs<=1 else "2 hrs")
     btxt = (f"EcoPlate Alert! {qty} portions of {item} at Rs.{sp} "
