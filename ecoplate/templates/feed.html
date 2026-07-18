@@ -1,387 +1,164 @@
-<!DOCTYPE html>
-<html lang="en" class="h-full">
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EcoPlate Live — Flash Food Deals in Thiruvananthapuram</title>
-  <meta name="description" content="EcoPlate Live — Grab deeply discounted end-of-day food from top restaurants in Thiruvananthapuram before it's gone!" />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>EcoPlate Live — Thiruvananthapuram</title>
+  <meta name="description" content="EcoPlate Live Feed — Discover surplus food deals near you in Thiruvananthapuram. Save money, reduce waste." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: { inter: ['Inter', 'sans-serif'] },
-          animation: {
-            'pulse-dot':   'pulseDot 1s ease-in-out infinite',
-            'slide-card':  'slideCard 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-            'badge-pop':   'badgePop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
-          },
-          keyframes: {
-            pulseDot:  { '0%,100%': { transform:'scale(1)', opacity:1 }, '50%': { transform:'scale(1.5)', opacity:0.7 } },
-            slideCard: { '0%': { opacity:0, transform:'translateY(24px)' }, '100%': { opacity:1, transform:'translateY(0)' } },
-            badgePop:  { '0%': { transform:'scale(0.7)' }, '100%': { transform:'scale(1)' } },
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: 'Inter', sans-serif; }
+    * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+    body { background: #060e14; min-height: 100vh; color: #fff; }
 
-    /* Card */
+    .glass { background: rgba(16,185,129,.06); backdrop-filter: blur(14px); border: 1px solid rgba(16,185,129,.18); }
+    .glass-card { background: rgba(255,255,255,.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.08); }
+
+    /* Deal card */
     .deal-card {
-      background: linear-gradient(145deg, #0f1318, #131920, #0f1318);
-      border: 1px solid rgba(255,255,255,0.06);
-      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-      animation: slideCard 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 1.25rem;
+      padding: 1.25rem;
+      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
     }
     .deal-card:hover {
-      transform: translateY(-4px) scale(1.005);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(234,88,12,0.08);
-      border-color: rgba(234,88,12,0.25);
+      transform: translateY(-4px);
+      border-color: rgba(16,185,129,.35);
+      box-shadow: 0 16px 40px rgba(16,185,129,.12);
+    }
+    .deal-card.expired {
+      opacity: .4;
+      filter: grayscale(.6);
+    }
+    .deal-card.expired:hover { transform: none; border-color: rgba(255,255,255,.08); box-shadow: none; }
+
+    /* Live pulse */
+    .live-dot {
+      width:10px; height:10px; border-radius:50%; background:#ef4444;
+      animation: livering 1.5s infinite;
+    }
+    @keyframes livering {
+      0%   { box-shadow: 0 0 0 0 rgba(239,68,68,.6); }
+      70%  { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
+      100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
     }
 
-    /* Pulsing red dot */
-    .pulse-red {
-      animation: pulseDot 1s ease-in-out infinite;
-      background: #ef4444;
-      border-radius: 50%;
-      width: 8px; height: 8px;
-      display: inline-block;
+    /* Filter chips */
+    .chip {
+      padding: .375rem 1rem; border-radius: 99px; font-size: .8125rem; font-weight: 500;
+      border: 1px solid rgba(255,255,255,.1); color: rgba(255,255,255,.4);
+      cursor: pointer; transition: all .2s; background: transparent;
+    }
+    .chip:hover, .chip.active {
+      border-color: rgba(16,185,129,.5); color: #10b981;
+      background: rgba(16,185,129,.08);
     }
 
-    /* OFF Badge */
+    /* OFF badge */
     .off-badge {
-      background: linear-gradient(135deg, #ea580c, #dc2626);
-      box-shadow: 0 0 20px rgba(234,88,12,0.5);
-      animation: badgePop 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
-    }
-
-    /* New price */
-    .new-price {
-      background: linear-gradient(135deg, #f97316, #ef4444);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      background: linear-gradient(135deg,#f59e0b,#ef4444);
+      font-size: .75rem; font-weight: 700; color: #fff;
+      padding: .25rem .625rem; border-radius: 99px;
+      display: inline-block; white-space: nowrap;
     }
 
     /* Claim button */
     .claim-btn {
-      background: linear-gradient(135deg, #ea580c, #dc2626);
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 20px rgba(234,88,12,0.25);
+      background: linear-gradient(135deg,#10b981,#059669);
+      color: #fff; font-weight: 600; font-size: .8125rem;
+      border-radius: .75rem; padding: .625rem 1rem;
+      border: none; cursor: pointer; width: 100%;
+      transition: all .2s;
     }
-    .claim-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(234,88,12,0.45);
-    }
-    .claim-btn:active { transform: translateY(0); }
+    .claim-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16,185,129,.35); }
+    .claim-btn:disabled { background: rgba(255,255,255,.08); transform: none; box-shadow: none; cursor: not-allowed; color: rgba(255,255,255,.35); }
 
-    /* Header gradient */
-    .header-gradient {
-      background: linear-gradient(180deg, #0a0d13 0%, rgba(10,13,19,0) 100%);
-    }
+    /* Countdown */
+    .countdown { font-size: .75rem; font-weight: 500; color: rgba(255,255,255,.5); }
+    .countdown.urgent { color: #ef4444; animation: blink 1s step-start infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
 
-    /* Countdown timer bar */
-    .timer-bar {
-      background: linear-gradient(90deg, #ef4444, #f97316);
-      height: 3px;
-      border-radius: 9999px;
-      transition: width 1s linear;
-    }
-
-    /* Empty state */
-    .empty-glow {
-      text-shadow: 0 0 40px rgba(234,88,12,0.3);
+    /* Modal */
+    #claim-modal { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,.75); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem; }
+    #claim-modal.open { display: flex; }
+    .modal-box {
+      background: #0a1929; border: 1px solid rgba(16,185,129,.35);
+      border-radius: 1.5rem; padding: 2.5rem; max-width: 360px; width: 100%; text-align: center;
     }
 
-    /* Scroll container */
-    .feed-scroll::-webkit-scrollbar { display: none; }
-
-    /* Live badge */
-    .live-badge {
-      background: rgba(239,68,68,0.15);
-      border: 1px solid rgba(239,68,68,0.4);
-      animation: livePulse 2s ease-in-out infinite;
+    .pickup-code {
+      font-family: 'Courier New', monospace;
+      font-size: 2.5rem; font-weight: 700; color: #10b981;
+      letter-spacing: .4em;
     }
-    @keyframes livePulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); }
-      50%     { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
-    }
-
-    /* Ticker */
-    .ticker-wrap { overflow: hidden; white-space: nowrap; }
-    .ticker-content { display: inline-block; animation: ticker 20s linear infinite; }
-    @keyframes ticker { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
-
-    .gradient-title {
-      background: linear-gradient(135deg, #f97316, #ef4444, #ec4899);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* Quantity urgency */
-    .urgency-low    { color: #22c55e; }
-    .urgency-medium { color: #f97316; }
-    .urgency-high   { color: #ef4444; }
   </style>
 </head>
+<body>
 
-<body class="min-h-screen bg-[#080b10] text-white">
-
-  <!-- ── Sticky Header ─────────────────────────────────────────────────── -->
-  <header class="sticky top-0 z-50 border-b border-white/5" style="background:rgba(8,11,16,0.9);backdrop-filter:blur(20px)">
-    <!-- Ticker -->
-    <div class="ticker-wrap py-1.5 border-b border-white/5" style="background:rgba(239,68,68,0.06)">
-      <div class="ticker-content text-xs text-red-400/80 font-medium">
-        🔥 FLASH DEALS ACTIVE &nbsp;·&nbsp; Limited quantities — grab before they're gone! &nbsp;·&nbsp;
-        ⚡ Up to 75% off original prices &nbsp;·&nbsp;
-        🏃 Orders filling fast &nbsp;·&nbsp;
-        🌿 Fight food waste. Save money. Win. &nbsp;·&nbsp;
-        🔥 FLASH DEALS ACTIVE &nbsp;·&nbsp;
+<!-- HEADER -->
+<header class="glass sticky top-0 z-50" style="border-bottom:1px solid rgba(16,185,129,.2)">
+  <div style="max-width:1200px;margin:0 auto;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <div style="width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#34d399,#059669);display:flex;align-items:center;justify-content:center;font-size:1.4rem">&#x1F33F;</div>
+      <div>
+        <h1 style="font-size:1.35rem;font-weight:800;color:#fff;margin:0">EcoPlate Live</h1>
+        <p style="font-size:.72rem;color:rgba(255,255,255,.4);margin:0">Thiruvananthapuram, Kerala</p>
       </div>
     </div>
-
-    <div class="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#ea580c,#dc2626)">
-          <span class="text-sm font-black text-white">EP</span>
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-sm font-black text-white tracking-tight">EcoPlate Live</h1>
-            <span class="live-badge text-red-400 text-[10px] font-bold px-2 py-0.5 rounded-full tracking-widest uppercase">Live</span>
-          </div>
-          <p class="text-[11px] text-gray-500">📍 Thiruvananthapuram</p>
-        </div>
+    <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+      <div class="glass" style="display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border-radius:99px">
+        <div class="live-dot"></div>
+        <span style="font-size:.8125rem;font-weight:600;color:#fff"><span id="deal-count">0</span> active deals</span>
       </div>
-      <div class="flex items-center gap-3">
-        <div class="text-right hidden sm:block">
-          <p class="text-[10px] text-gray-600 uppercase tracking-wider">Active Deals</p>
-          <p class="text-base font-black text-orange-400" id="deal-count">{{ sales | length }}</p>
-        </div>
-        <a href="/vendor"
-          class="text-xs font-semibold px-4 py-2 rounded-lg transition-all hover:scale-105"
-          style="background:rgba(234,88,12,0.12);border:1px solid rgba(234,88,12,0.3);color:#f97316">
-          + Post a Deal
-        </a>
-      </div>
-    </div>
-  </header>
-
-  <!-- ── Hero Title ─────────────────────────────────────────────────────── -->
-  <div class="max-w-2xl mx-auto px-4 py-8 text-center">
-    <h2 class="text-3xl sm:text-4xl font-black leading-tight mb-2">
-      <span class="gradient-title">Tonight's Flash Deals</span>
-    </h2>
-    <p class="text-sm text-gray-500 max-w-sm mx-auto">Restaurants clearing end-of-day inventory at jaw-dropping prices. Act fast — quantities are tiny.</p>
-  </div>
-
-  <!-- ── Feed ──────────────────────────────────────────────────────────── -->
-  <main class="max-w-2xl mx-auto px-4 pb-20 space-y-4">
-
-    {% if sales %}
-      {% for sale in sales %}
-      <div class="deal-card rounded-2xl p-5 relative overflow-hidden" style="animation-delay: {{ loop.index0 * 0.08 }}s; opacity: 0;" id="card-{{ sale.id }}">
-
-        <!-- Urgency glow accent -->
-        <div class="absolute top-0 right-0 w-32 h-32 rounded-full pointer-events-none"
-             style="background:radial-gradient(circle, rgba(234,88,12,0.06) 0%, transparent 70%); transform:translate(30%,-30%)"></div>
-
-        <!-- Top row: vendor + badge -->
-        <div class="flex items-start justify-between mb-3">
-          <div>
-            <p class="text-xs text-gray-500 uppercase tracking-widest font-medium">{{ sale.vendor_name }}</p>
-            <h3 class="text-lg font-black text-white mt-0.5 leading-tight">{{ sale.item }}</h3>
-          </div>
-          <div class="off-badge text-white text-xs font-black px-3 py-1.5 rounded-xl flex-shrink-0 ml-3">
-            {{ sale.discount_pct }}% OFF
-          </div>
-        </div>
-
-        <!-- Pricing row -->
-        <div class="flex items-end gap-3 mb-4">
-          <p class="new-price text-4xl font-black leading-none">₹{{ sale.suggested_price | int }}</p>
-          <p class="text-gray-500 text-sm line-through leading-loose">₹{{ sale.original_price | int }}</p>
-          <p class="text-[11px] text-gray-600 leading-loose pb-0.5">per item</p>
-        </div>
-
-        <!-- Stats row -->
-        <div class="flex items-center gap-4 mb-4 flex-wrap">
-          <!-- Quantity -->
-          {% if sale.qty <= 5 %}
-            <div class="flex items-center gap-1.5 text-xs font-bold urgency-high">
-              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
-              Only {{ sale.qty }} left!
-            </div>
-          {% elif sale.qty <= 12 %}
-            <div class="flex items-center gap-1.5 text-xs font-bold urgency-medium">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              {{ sale.qty }} remaining
-            </div>
-          {% else %}
-            <div class="flex items-center gap-1.5 text-xs font-semibold urgency-low">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              {{ sale.qty }} available
-            </div>
-          {% endif %}
-
-          <!-- Separator -->
-          <div class="w-px h-3 bg-white/10"></div>
-
-          <!-- Countdown timer -->
-          <div class="flex items-center gap-1.5">
-            <span class="pulse-red"></span>
-            <span class="text-xs font-bold text-red-400 timer-text" data-expires="{{ sale.expires_ts }}">
-              Expires in {{ sale.minutes_left }} min
-            </span>
-          </div>
-        </div>
-
-        <!-- Timer progress bar -->
-        <div class="w-full bg-white/5 rounded-full h-0.5 mb-4 overflow-hidden">
-          <div class="timer-bar"
-               id="bar-{{ sale.id }}"
-               data-expires="{{ sale.expires_ts }}"
-               data-hours="{{ sale.hours_left }}"
-               style="width: 100%"></div>
-        </div>
-
-        <!-- Claim button -->
-        <button
-          class="claim-btn w-full rounded-xl py-3.5 font-bold text-sm text-white tracking-wide flex items-center justify-center gap-2"
-          onclick="handleClaim(this, '{{ sale.item }}', {{ sale.suggested_price | int }})">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-          Claim Now — ₹{{ sale.suggested_price | int }}
-        </button>
-      </div>
-      {% endfor %}
-
-    {% else %}
-      <!-- Empty State -->
-      <div class="text-center py-24 px-6">
-        <div class="text-6xl mb-6 empty-glow">🍽️</div>
-        <h3 class="text-xl font-black text-white mb-2">No active deals right now</h3>
-        <p class="text-sm text-gray-500 max-w-xs mx-auto mb-6">Check back soon — restaurants post deals from 7 PM onwards. Or post your own!</p>
-        <a href="/vendor"
-          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-orange-400 transition-all hover:scale-105"
-          style="background:rgba(234,88,12,0.1);border:1px solid rgba(234,88,12,0.25)">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          Post a Deal
-        </a>
-      </div>
-    {% endif %}
-  </main>
-
-  <!-- ── Bottom Nav ─────────────────────────────────────────────────────── -->
-  <nav class="fixed bottom-0 left-0 right-0 border-t border-white/5 flex" style="background:rgba(8,11,16,0.95);backdrop-filter:blur(20px)">
-    <a href="/" class="flex-1 flex flex-col items-center py-3 gap-0.5">
-      <svg class="w-5 h-5 text-orange-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
-      <span class="text-[10px] text-orange-400 font-semibold">Feed</span>
-    </a>
-    <a href="/vendor" class="flex-1 flex flex-col items-center py-3 gap-0.5">
-      <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-      <span class="text-[10px] text-gray-600 font-semibold">Vendor</span>
-    </a>
-  </nav>
-
-  <!-- ── Claim Modal ─────────────────────────────────────────────────────── -->
-  <div id="claim-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.75);backdrop-filter:blur(8px)">
-    <div class="rounded-2xl p-8 max-w-sm w-full text-center space-y-4 relative"
-         style="background:#0f1318;border:1px solid rgba(234,88,12,0.3);box-shadow:0 0 60px rgba(234,88,12,0.15)">
-      <div class="text-5xl">🎉</div>
-      <h3 class="text-xl font-black text-white">Deal Claimed!</h3>
-      <p class="text-sm text-gray-400" id="modal-text">Your deal has been reserved.</p>
-      <div class="rounded-xl p-4" style="background:rgba(234,88,12,0.08);border:1px solid rgba(234,88,12,0.2)">
-        <p class="text-xs text-gray-500 mb-1">Collect within</p>
-        <p class="text-2xl font-black text-orange-400">15 minutes</p>
-        <p class="text-xs text-gray-600 mt-1">Show this screen at the counter</p>
-      </div>
-      <button onclick="closeModal()"
-        class="claim-btn w-full rounded-xl py-3 font-bold text-sm text-white">
-        Got it!
-      </button>
+      <a href="/vendor" style="font-size:.8125rem;color:#10b981;border:1px solid rgba(16,185,129,.3);padding:.5rem 1rem;border-radius:.75rem;text-decoration:none;font-weight:500;transition:all .2s"
+         onmouseover="this.style.background='rgba(16,185,129,.08)'"
+         onmouseout="this.style.background=''">Vendor Portal &#x2192;</a>
     </div>
   </div>
+</header>
 
-  <script>
-    // ── Countdown timers ─────────────────────────────────────────────────
-    function updateTimers() {
-      const now = Date.now();
+<!-- FILTER CHIPS -->
+<div style="max-width:1200px;margin:0 auto;padding:1.25rem 1.5rem .5rem;display:flex;align-items:center;gap:.625rem;flex-wrap:wrap">
+  <span style="font-size:.75rem;color:rgba(255,255,255,.3);margin-right:.25rem">Sort:</span>
+  <button id="chip-all"      class="chip active">All Deals</button>
+  <button id="chip-ending"   class="chip">&#x23F0; Ending Soon</button>
+  <button id="chip-discount" class="chip">&#x1F525; Biggest Discount</button>
+</div>
 
-      document.querySelectorAll('.timer-text').forEach(el => {
-        const expires = parseInt(el.dataset.expires, 10);
-        const diffMs  = expires - now;
-        if (diffMs <= 0) {
-          el.textContent = 'Expired';
-          el.classList.add('text-gray-600');
-          el.classList.remove('text-red-400');
-        } else {
-          const totalMins  = Math.floor(diffMs / 60000);
-          const hours      = Math.floor(totalMins / 60);
-          const mins       = totalMins % 60;
-          const secs       = Math.floor((diffMs % 60000) / 1000);
-          el.textContent   = hours > 0
-            ? `Expires in ${hours}h ${mins}m`
-            : `Expires in ${mins}m ${secs}s`;
-        }
-      });
+<!-- FEED GRID -->
+<main style="max-width:1200px;margin:0 auto;padding:1rem 1.5rem 4rem">
+  <div id="deals-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem"></div>
+  <div id="empty-state" style="display:none;text-align:center;padding:5rem 1rem">
+    <div style="font-size:3.5rem;margin-bottom:1rem">&#x1F331;</div>
+    <p style="color:rgba(255,255,255,.4);font-size:1.1rem;font-weight:500;margin:0 0 .4rem">No active deals right now.</p>
+    <p style="color:rgba(255,255,255,.25);font-size:.85rem;margin:0">Restaurants update regularly — check back soon!</p>
+  </div>
+</main>
 
-      // Progress bars
-      document.querySelectorAll('.timer-bar').forEach(bar => {
-        const expires  = parseInt(bar.dataset.expires, 10);
-        const hoursH   = parseFloat(bar.dataset.hours);
-        const totalMs  = hoursH * 3600 * 1000;
-        const startMs  = expires - totalMs;
-        const elapsed  = now - startMs;
-        const pct      = Math.max(0, 100 - (elapsed / totalMs) * 100);
-        bar.style.width = pct + '%';
-        if (pct < 25) {
-          bar.style.background = '#ef4444';
-        } else if (pct < 60) {
-          bar.style.background = 'linear-gradient(90deg,#ef4444,#f97316)';
-        }
-      });
-    }
+<!-- CLAIM MODAL -->
+<div id="claim-modal">
+  <div class="modal-box">
+    <div style="font-size:3rem;margin-bottom:1rem">&#x1F389;</div>
+    <h3 style="font-size:1.25rem;font-weight:700;color:#fff;margin:0 0 .4rem">Deal Claimed!</h3>
+    <p style="font-size:.8125rem;color:rgba(255,255,255,.4);margin:0 0 1.5rem">Show this code to the restaurant staff at pickup:</p>
 
-    updateTimers();
-    setInterval(updateTimers, 1000);
+    <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:1rem;padding:1.5rem;margin-bottom:1.25rem">
+      <div class="pickup-code" id="pickup-code">0000</div>
+      <div id="modal-item" style="font-size:.75rem;color:rgba(255,255,255,.35);margin-top:.5rem"></div>
+    </div>
 
-    // ── Claim modal ──────────────────────────────────────────────────────
-    function handleClaim(btn, item, price) {
-      document.getElementById('modal-text').textContent =
-        `You claimed ${item} for just ₹${price}! Head to the counter now.`;
-      const modal = document.getElementById('claim-modal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      btn.disabled = true;
-      btn.textContent = '✅ Claimed!';
-      btn.style.background = 'rgba(16,185,129,0.15)';
-      btn.style.border = '1px solid rgba(16,185,129,0.3)';
-      btn.style.color = '#10b981';
-      btn.style.boxShadow = 'none';
-    }
+    <div style="font-size:.75rem;color:rgba(255,255,255,.3);background:rgba(255,255,255,.04);border-radius:.875rem;padding:.875rem;margin-bottom:1.5rem">
+      &#x1F550; Valid until pickup. No online payment needed. Present this code to collect your meal.
+    </div>
 
-    function closeModal() {
-      const modal = document.getElementById('claim-modal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
+    <button id="close-modal" class="claim-btn" style="background:linear-gradient(135deg,#10b981,#059669)">
+      Got it! &#x2713;
+    </button>
+  </div>
+</div>
 
-    // Close modal on backdrop click
-    document.getElementById('claim-modal').addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
-    });
-
-    // ── Auto-refresh feed every 45 seconds ───────────────────────────────
-    setTimeout(() => location.reload(), 45000);
-  </script>
-
+<script src="/static/js/feed.js"></script>
 </body>
 </html>
