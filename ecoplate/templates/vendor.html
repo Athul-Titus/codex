@@ -1,497 +1,345 @@
-<!DOCTYPE html>
-<html lang="en" class="h-full">
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EcoPlate Vendor Portal — Smart Clearance Engine</title>
-  <meta name="description" content="EcoPlate Vendor Dashboard — AI-powered dynamic pricing to eliminate end-of-day food waste." />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>EcoPlate — Vendor Portal</title>
+  <meta name="description" content="EcoPlate Vendor Portal: AI-powered dynamic pricing to recover revenue from surplus food and reduce waste." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { inter: ['Inter', 'sans-serif'] },
-          animation: {
-            'spin-slow':   'spin 2s linear infinite',
-            'pulse-ring':  'pulseRing 1.5s ease-out infinite',
-            'slide-up':    'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-            'fade-in':     'fadeIn 0.4s ease forwards',
-            'shimmer':     'shimmer 2s linear infinite',
-          },
-          keyframes: {
-            pulseRing:  { '0%': { transform:'scale(0.8)', opacity:1 }, '100%': { transform:'scale(2.5)', opacity:0 } },
-            slideUp:    { '0%': { opacity:0, transform:'translateY(30px)' }, '100%': { opacity:1, transform:'translateY(0)' } },
-            fadeIn:     { '0%': { opacity:0 }, '100%': { opacity:1 } },
-            shimmer:    { '0%': { backgroundPosition:'200% center' }, '100%': { backgroundPosition:'-200% center' } },
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    .gradient-text {
-      background: linear-gradient(135deg, #10b981, #06b6d4, #8b5cf6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .glass {
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #10b981, #06b6d4);
-      transition: all 0.3s ease;
-      box-shadow: 0 0 20px rgba(16,185,129,0.25);
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 35px rgba(16,185,129,0.45);
-    }
-    .btn-primary:active { transform: translateY(0); }
+    * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+    body { background: #060e14; min-height: 100vh; }
+
+    .glass { background: rgba(16,185,129,.06); backdrop-filter: blur(14px); border: 1px solid rgba(16,185,129,.18); }
+    .glass-card { background: rgba(255,255,255,.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.08); }
+
     .input-field {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: all 0.25s;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      color: #fff;
+      transition: all .2s;
+      width: 100%;
+      border-radius: .75rem;
+      padding: .625rem 1rem;
+      font-size: .875rem;
     }
-    .input-field:focus {
-      border-color: #10b981;
-      box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
-      outline: none;
-      background: rgba(16,185,129,0.04);
-    }
-    .stat-card {
-      background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(6,182,212,0.05));
-      border: 1px solid rgba(16,185,129,0.2);
-    }
-    .result-card {
-      background: linear-gradient(145deg, #0f2027, #1a1a2e, #16213e);
-      border: 1px solid rgba(16,185,129,0.3);
-      animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
-    }
-    .price-badge {
+    .input-field:focus { background: rgba(16,185,129,.08); border-color: rgba(16,185,129,.5); outline: none; box-shadow: 0 0 0 3px rgba(16,185,129,.1); }
+    .input-field option { background: #0d1f2d; color: #fff; }
+    .input-field::placeholder { color: rgba(255,255,255,.25); }
+
+    .btn-green {
       background: linear-gradient(135deg, #10b981, #059669);
-      box-shadow: 0 0 30px rgba(16,185,129,0.4);
+      color: #fff; font-weight: 600; font-size: .875rem;
+      border-radius: .75rem; padding: .75rem 1.5rem;
+      border: none; cursor: pointer; width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      transition: all .2s;
     }
-    .loader-ring {
-      border: 3px solid rgba(16,185,129,0.15);
-      border-top-color: #10b981;
-      border-radius: 50%;
-      width: 56px; height: 56px;
-      animation: spin 1s linear infinite;
+    .btn-green:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(16,185,129,.35); }
+    .btn-green:active { transform: translateY(0); }
+    .btn-green:disabled { opacity: .5; transform: none; box-shadow: none; cursor: not-allowed; }
+
+    .btn-ghost {
+      background: transparent; color: rgba(255,255,255,.4);
+      font-size: .875rem; font-weight: 500;
+      border-radius: .75rem; padding: .75rem 1.5rem;
+      border: 1px solid rgba(255,255,255,.1); cursor: pointer; width: 100%;
+      transition: all .2s;
     }
+    .btn-ghost:hover { border-color: rgba(16,185,129,.4); color: #10b981; }
+
+    .skeleton {
+      background: linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(255,255,255,.09) 50%, rgba(255,255,255,.04) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: .75rem;
+    }
+    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+
+    .pulse-dot { width:8px; height:8px; border-radius:50%; background:#10b981; animation:pdot 2s infinite; }
+    @keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.6)} }
+
+    .toast {
+      position:fixed; bottom:1.5rem; right:1.5rem; z-index:9999;
+      transform:translateY(80px); opacity:0;
+      transition:all .35s cubic-bezier(.34,1.56,.64,1);
+    }
+    .toast.show { transform:translateY(0); opacity:1; }
+
+    .sparkbar-wrap { display:flex; align-items:flex-end; gap:5px; height:44px; }
+    .sparkbar {
+      flex:1; border-radius:4px 4px 0 0; min-height:4px;
+      background: linear-gradient(180deg, #10b981, #059669);
+      transition: height .5s ease;
+      position:relative; cursor:default;
+    }
+    .sparkbar:hover::after {
+      content:attr(data-tip);
+      position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%);
+      background:#10b981; color:#fff; font-size:10px; padding:2px 7px;
+      border-radius:4px; white-space:nowrap; pointer-events:none;
+    }
+
+    .stat-strip { position:relative; overflow:hidden; }
+    .stat-strip::after {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background:linear-gradient(90deg,transparent,#10b981,transparent);
+    }
+
+    .spin { animation: spin .7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .shimmer-text {
-      background: linear-gradient(90deg, #10b981 0%, #06b6d4 40%, #8b5cf6 60%, #10b981 100%);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: shimmer 2.5s linear infinite;
-    }
-    .revenue-glow {
-      text-shadow: 0 0 20px rgba(16,185,129,0.5);
-    }
-    .tag {
-      background: rgba(16,185,129,0.15);
-      border: 1px solid rgba(16,185,129,0.3);
-      color: #10b981;
-      font-size: 0.7rem;
-      padding: 2px 10px;
-      border-radius: 9999px;
-    }
+
+    label { display:block; font-size:.8125rem; color:rgba(255,255,255,.45); margin-bottom:.375rem; }
   </style>
 </head>
+<body>
 
-<body class="min-h-screen bg-[#080c14] text-white">
-
-  <!-- ── Top Navigation Bar ────────────────────────────────────────────── -->
-  <header class="sticky top-0 z-50 border-b border-white/5" style="background:rgba(8,12,20,0.85);backdrop-filter:blur(20px)">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#10b981,#06b6d4)">
-          <span class="text-sm font-black text-black">EP</span>
-        </div>
-        <div>
-          <h1 class="text-sm font-bold tracking-wide text-white">EcoPlate Vendor Portal</h1>
-          <p class="text-[10px] text-emerald-400/70 tracking-widest uppercase">Smart Clearance Engine</p>
-        </div>
+<!-- NAV -->
+<nav class="glass sticky top-0 z-50" style="border-bottom:1px solid rgba(16,185,129,.2)">
+  <div style="max-width:1200px;margin:0 auto;padding:.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+    <!-- Logo -->
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#34d399,#059669);display:flex;align-items:center;justify-content:center;font-size:1.2rem">🌿</div>
+      <div>
+        <span style="font-size:1.2rem;font-weight:800;color:#fff">EcoPlate</span>
+        <span style="margin-left:.5rem;font-size:.7rem;color:#10b981;background:rgba(16,185,129,.12);padding:.2rem .6rem;border-radius:99px;font-weight:600">Vendor Portal</span>
       </div>
-      <div class="flex items-center gap-4">
-        <!-- Mock Revenue Stat -->
-        <div class="stat-card rounded-xl px-5 py-2.5 flex items-center gap-3">
-          <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-          <div>
-            <p class="text-[10px] text-gray-400 uppercase tracking-widest">Revenue Recovered this Week</p>
-            <p class="text-lg font-black text-emerald-400">₹4,250</p>
+    </div>
+
+    <!-- Stats -->
+    <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+      <div class="stat-strip glass-card" style="border-radius:12px;padding:.5rem 1rem;text-align:center;min-width:100px">
+        <div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:.2rem">Revenue Recovered</div>
+        <div id="stat-revenue" style="font-size:1.1rem;font-weight:800;color:#10b981">&#x20B9;0</div>
+      </div>
+      <div class="stat-strip glass-card" style="border-radius:12px;padding:.5rem 1rem;text-align:center;min-width:80px">
+        <div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:.2rem">Meals Saved</div>
+        <div id="stat-meals" style="font-size:1.1rem;font-weight:800;color:#6ee7b7">0</div>
+      </div>
+      <div class="stat-strip glass-card" style="border-radius:12px;padding:.5rem 1rem;text-align:center;min-width:90px">
+        <div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:.2rem">CO&#x2082; Avoided</div>
+        <div id="stat-co2" style="font-size:1.1rem;font-weight:800;color:#5eead4">0 kg</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.4rem">
+        <div class="pulse-dot"></div>
+        <span style="font-size:.75rem;color:#10b981;font-weight:600">Live</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main style="max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem">
+
+  <!-- Hero -->
+  <div style="margin-bottom:2rem">
+    <h1 style="font-size:1.875rem;font-weight:800;color:#fff;margin:0 0 .5rem">Rescue Your Surplus Food</h1>
+    <p style="color:rgba(255,255,255,.4);margin:0;font-size:.9rem">AI-powered pricing that maximises revenue while minimising waste — in seconds.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 320px;gap:1.5rem;align-items:start">
+
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <!-- FORM -->
+      <div id="form-section" class="glass-card" style="border-radius:1.25rem;padding:1.75rem;margin-bottom:1.25rem">
+        <h2 style="font-size:1rem;font-weight:700;color:#fff;margin:0 0 1.25rem;display:flex;align-items:center;gap:.5rem">
+          <span style="color:#10b981">⚡</span> New Surplus Listing
+        </h2>
+        <form id="pricing-form" novalidate>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+            <div>
+              <label for="f-item">Item Name *</label>
+              <input id="f-item" class="input-field" type="text" placeholder="e.g. Paneer Butter Masala" />
+            </div>
+            <div>
+              <label for="f-vendor">Restaurant / Vendor *</label>
+              <input id="f-vendor" class="input-field" type="text" placeholder="e.g. Hotel Abad Plaza" />
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem">
+            <div>
+              <label for="f-qty">Quantity (portions) *</label>
+              <input id="f-qty" class="input-field" type="number" min="1" placeholder="e.g. 10" />
+            </div>
+            <div>
+              <label for="f-price">Original Price (&#x20B9;) *</label>
+              <input id="f-price" class="input-field" type="number" min="1" placeholder="e.g. 250" />
+            </div>
+            <div>
+              <label for="f-peri">Perishability</label>
+              <select id="f-peri" class="input-field">
+                <option value="Cooked">Cooked</option>
+                <option value="Dairy">Dairy</option>
+                <option value="Bakery">Bakery</option>
+                <option value="Produce">Produce</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-bottom:1.25rem">
+            <label for="f-hours">Time Left to Sell</label>
+            <select id="f-hours" class="input-field">
+              <option value="0.5">30 minutes</option>
+              <option value="1">1 hour</option>
+              <option value="2">2 hours</option>
+            </select>
+          </div>
+          <button type="submit" id="submit-btn" class="btn-green">
+            <span>&#x1F916;</span> Calculate AI Price
+          </button>
+        </form>
+      </div>
+
+      <!-- SKELETON -->
+      <div id="skeleton-section" style="display:none" class="glass-card" style="border-radius:1.25rem;padding:1.75rem;margin-bottom:1.25rem">
+        <div class="glass-card" style="border-radius:1.25rem;padding:1.75rem">
+          <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
+            <div class="skeleton" style="width:24px;height:24px;border-radius:50%"></div>
+            <div class="skeleton" style="width:200px;height:16px"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.5rem">
+            <div class="skeleton" style="height:48px;width:100%"></div>
+            <div class="skeleton" style="height:48px;width:75%"></div>
+            <div class="skeleton" style="height:48px;width:88%"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <div style="width:16px;height:16px;border:2px solid #10b981;border-top-color:transparent;border-radius:50%" class="spin"></div>
+            <span id="skel-caption" style="font-size:.8125rem;color:#10b981;font-weight:500">Analyzing historical footfall...</span>
           </div>
         </div>
-        <a href="/" class="text-xs text-gray-500 hover:text-emerald-400 transition-colors flex items-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-          Live Feed
+      </div>
+
+      <!-- RESULT -->
+      <div id="result-section" style="display:none">
+        <div class="glass-card" style="border-radius:1.25rem;padding:1.75rem;border:1px solid rgba(16,185,129,.25);margin-bottom:1rem">
+          <!-- Header -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.5rem">
+            <h2 style="font-size:1rem;font-weight:700;color:#fff;margin:0;display:flex;align-items:center;gap:.5rem">
+              &#x2705; AI Pricing Result
+            </h2>
+            <div style="display:flex;align-items:center;gap:.4rem">
+              <div style="width:7px;height:7px;border-radius:50%;background:#10b981;animation:pdot 2s infinite"></div>
+              <span style="font-size:.75rem;color:#10b981;font-weight:500">Model confidence: <strong id="res-conf">--</strong>%</span>
+            </div>
+          </div>
+
+          <!-- Price grid -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.25rem">
+            <div class="glass" style="border-radius:.875rem;padding:1rem;text-align:center">
+              <div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:.3rem">Original Price</div>
+              <div id="res-orig" style="font-size:1.3rem;font-weight:700;color:rgba(255,255,255,.35);text-decoration:line-through">&#x20B9;0</div>
+            </div>
+            <div class="glass" style="border-radius:.875rem;padding:1rem;text-align:center;border:1px solid rgba(16,185,129,.4)">
+              <div style="font-size:.7rem;color:#10b981;margin-bottom:.3rem">AI Suggested</div>
+              <div id="res-price" style="font-size:1.5rem;font-weight:800;color:#10b981">&#x20B9;0</div>
+            </div>
+            <div class="glass" style="border-radius:.875rem;padding:1rem;text-align:center">
+              <div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:.3rem">Discount</div>
+              <div id="res-disc" style="font-size:1.5rem;font-weight:800;color:#fb923c">0%</div>
+            </div>
+          </div>
+
+          <!-- Revenue bar -->
+          <div class="glass" style="border-radius:.875rem;padding:1rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
+            <div>
+              <div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:.2rem">Estimated Revenue Recovery</div>
+              <div id="res-rev" style="font-size:1.75rem;font-weight:800;color:#fff">&#x20B9;0</div>
+            </div>
+            <span style="font-size:2.5rem">&#x1F4B0;</span>
+          </div>
+
+          <!-- Broadcast textarea -->
+          <div style="margin-bottom:1rem">
+            <label for="broadcast-txt" style="color:rgba(255,255,255,.5);font-size:.8rem;margin-bottom:.4rem;display:block">&#x1F4E2; Broadcast Copy <span style="color:rgba(255,255,255,.25)">(editable before publishing)</span></label>
+            <textarea id="broadcast-txt" rows="3" class="input-field" style="resize:vertical;line-height:1.6"></textarea>
+          </div>
+
+          <!-- Publish button -->
+          <button id="publish-btn" class="btn-green">
+            &#x1F4E1; Publish to Live Feed &amp; Copy to Clipboard
+          </button>
+        </div>
+
+        <button id="new-btn" class="btn-ghost">+ Start New Listing</button>
+      </div>
+
+    </div><!-- /left -->
+
+    <!-- RIGHT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:1.25rem">
+
+      <!-- Sparkline -->
+      <div class="glass-card" style="border-radius:1.25rem;padding:1.25rem">
+        <div style="font-size:.875rem;font-weight:700;color:#fff;margin-bottom:.25rem;display:flex;align-items:center;gap:.4rem">
+          &#x1F4CA; Last 5 Discount Rates
+        </div>
+        <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-bottom:1rem">Live from your session</div>
+        <div id="sparkline" class="sparkbar-wrap">
+          <div style="font-size:.75rem;color:rgba(255,255,255,.25);text-align:center;width:100%">No listings yet</div>
+        </div>
+        <div id="spark-labels" style="display:flex;gap:5px;margin-top:.4rem"></div>
+      </div>
+
+      <!-- Model factors -->
+      <div class="glass-card" style="border-radius:1.25rem;padding:1.25rem">
+        <div style="font-size:.875rem;font-weight:700;color:#fff;margin-bottom:1rem;display:flex;align-items:center;gap:.4rem">
+          &#x1F9E0; Model Factors
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div style="display:flex;gap:.75rem;align-items:flex-start">
+            <div style="width:28px;height:28px;border-radius:8px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem">&#x23F0;</div>
+            <div>
+              <div style="font-size:.8rem;font-weight:600;color:#fff">Urgency Factor</div>
+              <div style="font-size:.72rem;color:rgba(255,255,255,.35);margin-top:.15rem">&lt;30 min triggers aggressive pricing</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:.75rem;align-items:flex-start">
+            <div style="width:28px;height:28px;border-radius:8px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem">&#x1F4E6;</div>
+            <div>
+              <div style="font-size:.8rem;font-weight:600;color:#fff">Inventory Pressure</div>
+              <div style="font-size:.72rem;color:rgba(255,255,255,.35);margin-top:.15rem">More portions = higher urgency signal</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:.75rem;align-items:flex-start">
+            <div style="width:28px;height:28px;border-radius:8px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem">&#x1F9CA;</div>
+            <div>
+              <div style="font-size:.8rem;font-weight:600;color:#fff">Spoilage Risk</div>
+              <div style="font-size:.72rem;color:rgba(255,255,255,.35);margin-top:.15rem">Dairy/Cooked: +5–10% extra discount</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:.75rem;align-items:flex-start">
+            <div style="width:28px;height:28px;border-radius:8px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem">&#x1F3B2;</div>
+            <div>
+              <div style="font-size:.8rem;font-weight:600;color:#fff">Market Variance</div>
+              <div style="font-size:.72rem;color:rgba(255,255,255,.35);margin-top:.15rem">±4% real-time demand modelling</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="glass-card" style="border-radius:1.25rem;padding:1.25rem">
+        <div style="font-size:.875rem;font-weight:700;color:#fff;margin-bottom:.75rem">&#x1F517; Quick Links</div>
+        <a href="/" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:.6rem .75rem;border-radius:.75rem;color:rgba(255,255,255,.45);font-size:.8125rem;text-decoration:none;transition:all .2s"
+           onmouseover="this.style.background='rgba(255,255,255,.05)';this.style.color='#10b981'"
+           onmouseout="this.style.background='';this.style.color='rgba(255,255,255,.45)'">
+          Consumer Live Feed <span style="color:#10b981">&#x2192;</span>
         </a>
       </div>
-    </div>
-  </header>
 
-  <!-- ── Main Content ───────────────────────────────────────────────────── -->
-  <main class="max-w-3xl mx-auto px-6 py-12">
+    </div><!-- /right -->
+  </div>
+</main>
 
-    <!-- Page Title -->
-    <div class="mb-10 text-center">
-      <span class="tag mb-4 inline-block">AI-Powered · Zero Waste · Real-Time</span>
-      <h2 class="text-4xl font-black leading-tight mb-3">
-        <span class="gradient-text">Clearance Strategy</span><br/>
-        <span class="text-white">Engine</span>
-      </h2>
-      <p class="text-gray-400 text-sm max-w-md mx-auto">Input your leftover inventory. Our model calculates the exact price to clear it in 30–60 minutes.</p>
-    </div>
+<!-- TOAST -->
+<div id="toast" class="toast glass-card" style="border-radius:.875rem;padding:.75rem 1.25rem;display:flex;align-items:center;gap:.6rem;max-width:320px;border:1px solid rgba(16,185,129,.2)">
+  <span id="toast-icon">&#x2705;</span>
+  <span id="toast-msg" style="font-size:.8125rem;color:#fff;font-weight:500"></span>
+</div>
 
-    <!-- ── SECTION 1: Input Form ──────────────────────────────────────── -->
-    <div id="form-section">
-      <div class="glass rounded-2xl p-8 space-y-6">
-
-        <!-- Vendor Name -->
-        <div>
-          <label for="vendor-name" class="block text-xs font-semibold text-gray-400 mb-2 uppercase tracking-widest">Your Restaurant / Hotel Name</label>
-          <input id="vendor-name" type="text" placeholder="e.g. Hotel Paradise, Spice Garden" value="Hotel Paradise"
-            class="input-field w-full rounded-xl px-4 py-3 text-white placeholder-gray-600 text-sm" />
-        </div>
-
-        <!-- Item Name -->
-        <div>
-          <label for="item-name" class="block text-xs font-semibold text-gray-400 mb-2 uppercase tracking-widest">Item Name</label>
-          <input id="item-name" type="text" placeholder="e.g. Chicken Biryani, Paneer Butter Masala"
-            class="input-field w-full rounded-xl px-4 py-3 text-white placeholder-gray-600 text-sm" />
-        </div>
-
-        <!-- Row: Quantity + Price -->
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label for="quantity" class="block text-xs font-semibold text-gray-400 mb-2 uppercase tracking-widest">Quantity Remaining</label>
-            <input id="quantity" type="number" min="1" placeholder="e.g. 15"
-              class="input-field w-full rounded-xl px-4 py-3 text-white placeholder-gray-600 text-sm" />
-          </div>
-          <div>
-            <label for="original-price" class="block text-xs font-semibold text-gray-400 mb-2 uppercase tracking-widest">Original Price (₹)</label>
-            <div class="relative">
-              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">₹</span>
-              <input id="original-price" type="number" min="1" placeholder="e.g. 220"
-                class="input-field w-full rounded-xl pl-8 pr-4 py-3 text-white placeholder-gray-600 text-sm" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Time Left -->
-        <div>
-          <label for="time-left" class="block text-xs font-semibold text-gray-400 mb-2 uppercase tracking-widest">Time Left Until Closing</label>
-          <select id="time-left"
-            class="input-field w-full rounded-xl px-4 py-3 text-white text-sm appearance-none cursor-pointer">
-            <option value="0.5">30 Minutes</option>
-            <option value="1" selected>1 Hour</option>
-            <option value="2">2 Hours</option>
-          </select>
-        </div>
-
-        <!-- Submit -->
-        <button id="calculate-btn" onclick="handleCalculate()"
-          class="btn-primary w-full rounded-xl py-4 font-bold text-sm text-black tracking-wide flex items-center justify-center gap-2">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
-          </svg>
-          Calculate Optimal Clearance Strategy
-        </button>
-      </div>
-    </div>
-
-    <!-- ── SECTION 2: Loading State ───────────────────────────────────── -->
-    <div id="loading-section" class="hidden">
-      <div class="glass rounded-2xl p-12 flex flex-col items-center justify-center space-y-8 min-h-[340px]">
-        <!-- Concentric rings -->
-        <div class="relative flex items-center justify-center w-24 h-24">
-          <div class="absolute inset-0 rounded-full border-2 border-emerald-500/20 animate-ping" style="animation-duration:1.8s"></div>
-          <div class="absolute inset-2 rounded-full border-2 border-emerald-500/30 animate-ping" style="animation-duration:1.4s;animation-delay:0.3s"></div>
-          <div class="loader-ring"></div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-            </svg>
-          </div>
-        </div>
-        <div class="text-center space-y-2">
-          <p id="loading-text" class="shimmer-text text-lg font-semibold">Analyzing historical footfall...</p>
-          <p class="text-xs text-gray-600">EcoPlate AI Model v2.1 · Running inference...</p>
-        </div>
-        <!-- Fake progress bar -->
-        <div class="w-full max-w-xs bg-white/5 rounded-full h-1.5 overflow-hidden">
-          <div id="progress-bar" class="h-full rounded-full transition-all duration-500" style="background:linear-gradient(90deg,#10b981,#06b6d4);width:0%"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── SECTION 3: Result Card ─────────────────────────────────────── -->
-    <div id="result-section" class="hidden space-y-5">
-
-      <!-- Success Banner -->
-      <div class="flex items-center gap-2.5 p-3 rounded-xl" style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2)">
-        <svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-        <p class="text-sm text-emerald-300 font-medium">Optimal pricing strategy calculated! Review below and publish to your live feed.</p>
-      </div>
-
-      <!-- Pricing Card -->
-      <div class="result-card rounded-2xl p-8">
-        <div class="grid grid-cols-2 gap-6 mb-8">
-          <!-- AI Suggested Price -->
-          <div class="text-center">
-            <p class="text-xs text-gray-500 uppercase tracking-widest mb-3">AI Suggested Price</p>
-            <div class="price-badge rounded-2xl px-6 py-5 inline-block">
-              <p class="text-4xl font-black text-white" id="result-price">₹—</p>
-            </div>
-            <p class="text-xs text-gray-600 mt-2">
-              <span class="line-through" id="result-original-price">₹—</span>
-              <span class="ml-1 text-emerald-400 font-semibold" id="result-discount">—% OFF</span>
-            </p>
-          </div>
-          <!-- Estimated Revenue -->
-          <div class="text-center">
-            <p class="text-xs text-gray-500 uppercase tracking-widest mb-3">Estimated Revenue Recovery</p>
-            <div class="rounded-2xl px-6 py-5 inline-block" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-              <p class="text-4xl font-black revenue-glow text-emerald-400" id="result-revenue">₹—</p>
-            </div>
-            <p class="text-xs text-gray-600 mt-2" id="result-qty-label">— units cleared</p>
-          </div>
-        </div>
-
-        <!-- Divider -->
-        <div class="border-t border-white/5 mb-6"></div>
-
-        <!-- Broadcast Copy -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold">📣 Auto-Generated Broadcast Copy</p>
-            <div class="flex gap-2">
-              <span class="tag">WhatsApp Ready</span>
-              <span class="tag">Instagram Ready</span>
-            </div>
-          </div>
-          <textarea id="broadcast-text" rows="4"
-            class="input-field w-full rounded-xl px-4 py-3 text-sm text-gray-200 resize-none leading-relaxed font-medium"></textarea>
-          <p class="text-[11px] text-gray-600">✏️ Editable — personalise before publishing.</p>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="grid grid-cols-2 gap-4">
-        <button onclick="resetForm()"
-          class="rounded-xl py-3.5 text-sm font-semibold text-gray-400 hover:text-white transition-all"
-          style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-          ← New Item
-        </button>
-        <button id="publish-btn" onclick="handlePublish()"
-          class="btn-primary rounded-xl py-3.5 font-bold text-sm text-black tracking-wide flex items-center justify-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
-          </svg>
-          Publish to Live Feed &amp; Copy
-        </button>
-      </div>
-
-      <!-- Publish success toast -->
-      <div id="publish-toast" class="hidden rounded-xl p-4 flex items-center gap-3" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3)">
-        <svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-        <div>
-          <p class="text-sm font-semibold text-emerald-300" id="toast-message">Published!</p>
-          <p class="text-xs text-gray-500 mt-0.5">Broadcast copy copied to clipboard. <a href="/" class="text-emerald-400 hover:underline">View Live Feed →</a></p>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <script>
-    // ── State ────────────────────────────────────────────────────────────
-    let currentResult = null;
-
-    const LOADING_STEPS = [
-      { text: "Analyzing historical footfall...", pct: 25 },
-      { text: "Checking local weather conditions...", pct: 60 },
-      { text: "Calculating dynamic price curve...", pct: 90 },
-    ];
-
-    // ── Helpers ──────────────────────────────────────────────────────────
-    function show(id)  { document.getElementById(id).classList.remove('hidden'); }
-    function hide(id)  { document.getElementById(id).classList.add('hidden'); }
-
-    function showError(msg) {
-      const existing = document.getElementById('form-error');
-      if (existing) existing.remove();
-      const el = document.createElement('p');
-      el.id = 'form-error';
-      el.className = 'text-red-400 text-xs mt-3 flex items-center gap-1';
-      el.innerHTML = `<svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg> ${msg}`;
-      document.getElementById('calculate-btn').insertAdjacentElement('afterend', el);
-    }
-
-    // ── Loading orchestration ────────────────────────────────────────────
-    function runLoadingSequence() {
-      return new Promise((resolve) => {
-        const textEl = document.getElementById('loading-text');
-        const barEl  = document.getElementById('progress-bar');
-        let step = 0;
-
-        const TOTAL_MS = 2500;
-        const intervals = [0, 750, 1600];   // when each step fires
-
-        intervals.forEach((delay, i) => {
-          setTimeout(() => {
-            textEl.textContent = LOADING_STEPS[i].text;
-            barEl.style.width  = LOADING_STEPS[i].pct + '%';
-          }, delay);
-        });
-
-        setTimeout(() => {
-          barEl.style.width = '100%';
-          setTimeout(resolve, 200);
-        }, TOTAL_MS);
-      });
-    }
-
-    // ── Main Calculate Handler ───────────────────────────────────────────
-    async function handleCalculate() {
-      const item       = document.getElementById('item-name').value.trim();
-      const qty        = parseInt(document.getElementById('quantity').value, 10);
-      const origPrice  = parseFloat(document.getElementById('original-price').value);
-      const hoursLeft  = parseFloat(document.getElementById('time-left').value);
-      const vendorName = document.getElementById('vendor-name').value.trim() || 'EcoPlate Partner';
-
-      // Validate
-      const existing = document.getElementById('form-error');
-      if (existing) existing.remove();
-
-      if (!item)              return showError("Please enter an item name.");
-      if (!qty || qty < 1)   return showError("Quantity must be at least 1.");
-      if (!origPrice || origPrice < 1) return showError("Please enter a valid original price.");
-
-      // Switch to loading
-      hide('form-section');
-      show('loading-section');
-
-      // Start fetch + loading sequence in parallel
-      const [response] = await Promise.all([
-        fetch('/api/calculate', {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ item, qty, original_price: origPrice, hours_left: hoursLeft, vendor_name: vendorName }),
-        }),
-        runLoadingSequence(),
-      ]);
-
-      hide('loading-section');
-
-      if (!response.ok) {
-        const err = await response.json().catch(() => ({ error: 'Unknown server error.' }));
-        show('form-section');
-        showError(err.error || 'Server error. Please try again.');
-        return;
-      }
-
-      const data = await response.json();
-      currentResult = { ...data, item, qty, hours_left: hoursLeft, vendor_name: vendorName };
-
-      // Populate result card
-      document.getElementById('result-price').textContent          = `₹${data.suggested_price}`;
-      document.getElementById('result-original-price').textContent = `₹${data.original_price}`;
-      document.getElementById('result-discount').textContent        = `${data.discount_pct}% OFF`;
-      document.getElementById('result-revenue').textContent         = `₹${data.estimated_revenue}`;
-      document.getElementById('result-qty-label').textContent       = `${qty} unit${qty > 1 ? 's' : ''} cleared`;
-      document.getElementById('broadcast-text').value               = data.broadcast_text;
-
-      hide('publish-toast');
-      show('result-section');
-    }
-
-    // ── Publish Handler ──────────────────────────────────────────────────
-    async function handlePublish() {
-      if (!currentResult) return;
-
-      const broadcastText = document.getElementById('broadcast-text').value;
-      const btn           = document.getElementById('publish-btn');
-
-      btn.disabled    = true;
-      btn.textContent = 'Publishing...';
-
-      try {
-        const response = await fetch('/api/publish', {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({
-            item:             currentResult.item,
-            qty:              currentResult.qty,
-            suggested_price:  currentResult.suggested_price,
-            original_price:   currentResult.original_price,
-            discount_pct:     currentResult.discount_pct,
-            hours_left:       currentResult.hours_left,
-            vendor_name:      currentResult.vendor_name,
-          }),
-        });
-
-        const data = await response.json();
-
-        // Copy to clipboard
-        try {
-          await navigator.clipboard.writeText(broadcastText);
-        } catch {
-          // clipboard API may be blocked — silent fail
-        }
-
-        if (response.ok && data.success) {
-          document.getElementById('toast-message').textContent = data.message;
-          show('publish-toast');
-          btn.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Published!`;
-          btn.className = 'rounded-xl py-3.5 font-bold text-sm tracking-wide flex items-center justify-center gap-2 w-full text-emerald-300';
-          btn.style.cssText = 'background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);';
-        } else {
-          alert(data.error || 'Publish failed.');
-          btn.disabled = false;
-          btn.innerHTML = 'Publish to Live Feed &amp; Copy';
-          btn.className = 'btn-primary rounded-xl py-3.5 font-bold text-sm text-black tracking-wide flex items-center justify-center gap-2';
-        }
-
-      } catch (err) {
-        alert('Network error. Please check your connection.');
-        btn.disabled = false;
-      }
-    }
-
-    // ── Reset ────────────────────────────────────────────────────────────
-    function resetForm() {
-      currentResult = null;
-      hide('result-section');
-      hide('loading-section');
-      hide('publish-toast');
-      show('form-section');
-
-      document.getElementById('item-name').value = '';
-      document.getElementById('quantity').value  = '';
-      document.getElementById('original-price').value = '';
-      document.getElementById('time-left').value = '1';
-      document.getElementById('progress-bar').style.width = '0%';
-
-      const err = document.getElementById('form-error');
-      if (err) err.remove();
-
-      // Reset publish button
-      const btn = document.getElementById('publish-btn');
-      btn.disabled = false;
-      btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg> Publish to Live Feed &amp; Copy`;
-      btn.className = 'btn-primary rounded-xl py-3.5 font-bold text-sm text-black tracking-wide flex items-center justify-center gap-2';
-      btn.style.cssText = '';
-    }
-  </script>
-
+<script src="/static/js/vendor.js"></script>
 </body>
 </html>
