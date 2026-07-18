@@ -1,177 +1,194 @@
-import random
-import math
-from datetime import datetime, timedelta
+﻿import random
+import time
+import uuid
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-# ---------------------------------------------------------------------------
-# In-memory data store — no external DB required
-# ---------------------------------------------------------------------------
-ACTIVE_SALES = []
+# ── SESSION STATS (grows as vendors publish) ───────────────────────────────────
+SESSION_STATS = {
+    "revenue_recovered": 0.0,
+    "meals_saved": 0,
+    "co2_avoided": 0.0,
+}
 
-# ---------------------------------------------------------------------------
-# Mock Machine Learning Pricing Engine
-# ---------------------------------------------------------------------------
-def calculate_optimal_price(original_price: float, qty: int, hours_left: float) -> dict:
+# ── PERISHABILITY SPOILAGE-RISK MULTIPLIERS ────────────────────────────────────
+PERISHABILITY_MULTIPLIER = {
+    "Dairy":   1.12,
+    "Cooked":  1.08,
+    "Bakery":  1.0,
+    "Produce": 1.0,
+}
+
+# ── MOCK ML PRICING ENGINE ─────────────────────────────────────────────────────
+def calculate_optimal_price(original_price, qty, hours_left, perishability="Cooked"):
     """
-    Simulates a regression/classification model for dynamic clearance pricing.
-
-    Key rules:
-    - Urgency factor: fewer hours → steeper discount
-    - Volume factor: more items left → steeper discount (harder to clear)
-    - Random variance ± 3 % to feel authentic
+    Deterministic rule-based pricing with +/-4% random variance.
+    Calibration: 1 hr + 20 items ~70% off | 2 hr + 5 items ~30% off
     """
+    if original_price <= 0 or qty <= 0:
+        return (original_price, 0.0, 82)
 
-    # --- Urgency score (0.0 – 1.0, higher = more urgent) ---
-    urgency = 1.0 - (hours_left / 2.0)          # 0.5 h → 0.75 | 2 h → 0.0
-    urgency = max(0.0, min(1.0, urgency))
+    time_factor   = max(0.0, 1.0 - min(hours_left, 3.0) / 3.0)
+    qty_factor    = min(qty, 40) / 40.0
+    urgency       = time_factor * 0.65 + qty_factor * 0.35
+    base_discount = urgency * 75.0
 
-    # --- Volume score (0.0 – 1.0, higher = harder to clear) ---
-    # Sigmoid-like normalisation: qty 1→low, qty 30+→high
-    volume = 1.0 / (1.0 + math.exp(-0.15 * (qty - 10)))
+    multiplier    = PERISHABILITY_MULTIPLIER.get(perishability, 1.0)
+    base_discount *= multiplier
+    base_discount += random.uniform(-4.0, 4.0)
 
-    # --- Base discount % ---
-    base_discount = 0.20 + (urgency * 0.35) + (volume * 0.20)
+    discount_pct     = round(max(15.0, min(80.0, base_discount)), 1)
+    suggested_price  = round(original_price * (1.0 - discount_pct / 100.0), 2)
+    confidence_score = random.randint(82, 96)
 
-    # Random variance ± 3 %
-    variance = random.uniform(-0.03, 0.03)
-    discount = min(max(base_discount + variance, 0.15), 0.80)   # clamp 15 %–80 %
+    return (suggested_price, discount_pct, confidence_score)
 
-    suggested_price = round(original_price * (1 - discount))
-    discount_pct    = round(discount * 100)
 
+def _make_seed(item, vendor, qty, original_price, discount_pct, hours_left, perishability):
+    suggested_price = round(original_price * (1.0 - discount_pct / 100.0), 2)
+    now = time.time()
     return {
-        "suggested_price": suggested_price,
-        "discount_pct":    discount_pct,
-        "original_price":  original_price,
+        "id":             str(uuid.uuid4()),
+        "item":           item,
+        "vendor":         vendor,
+        "qty":            qty,
+        "original_price": float(original_price),
+        "suggested_price": float(suggested_price),
+        "discount_pct":   float(discount_pct),
+        "perishability":  perishability,
+        "broadcast_text": (
+            f"EcoPlate Alert! {qty} portions of {item} at Rs.{suggested_price} "
+            f"({discount_pct}% OFF). Freshly rescued - pickup before closing! #EcoPlate"
+        ),
+        "expires_at":   now + hours_left * 3600.0,
+        "published_at": now,
     }
 
 
-def generate_broadcast_text(item: str, qty: int, suggested_price: float,
-                             original_price: float, hours_left: float,
-                             vendor_name: str = "EcoPlate Partner") -> str:
-    """Returns a FOMO-inducing broadcast message."""
-    time_str = (
-        "30 minutes" if hours_left <= 0.5
-        else ("1 hour" if hours_left <= 1.0 else "2 hours")
-    )
-    emojis = ["🔥", "🚨", "⚡", "🎯"]
-    emoji  = random.choice(emojis)
+ACTIVE_SALES = [
+    _make_seed("Paneer Butter Masala",  "Hotel Abad Plaza",  8,  220, 45.0, 1.5,  "Cooked"),
+    _make_seed("Assorted Pastries Box", "Baker Street Cafe", 12, 350, 35.0, 0.75, "Bakery"),
+    _make_seed("Fresh Fruit Salad",     "The Green Bowl",    6,  180, 50.0, 0.5,  "Produce"),
+]
 
-    return (
-        f"{emoji} Flash Sale at {vendor_name}! "
-        f"{qty} {item}{'s' if qty > 1 else ''} left for just ₹{int(suggested_price)}! "
-        f"(was ₹{int(original_price)}) "
-        f"Grab them before we close in {time_str}. "
-        f"First come, first served! Limited stock — act NOW! 🏃"
-    )
+for _s in ACTIVE_SALES:
+    SESSION_STATS["revenue_recovered"] += _s["suggested_price"] * _s["qty"]
+    SESSION_STATS["meals_saved"]       += _s["qty"]
+    SESSION_STATS["co2_avoided"]       += _s["qty"] * 2.5
 
-
-# ---------------------------------------------------------------------------
-# Routes
-# ---------------------------------------------------------------------------
 
 @app.route("/")
 def feed():
-    """Public consumer live feed."""
-    now = datetime.utcnow()
-    live = [s for s in ACTIVE_SALES if s["expires_at"] > now]
-    ACTIVE_SALES[:] = live  # prune in-place
-
-    enriched = []
-    for sale in live:
-        s = dict(sale)
-        delta_secs = (s["expires_at"] - now).total_seconds()
-        s["minutes_left"] = max(0, int(delta_secs // 60))
-        s["expires_ts"]   = int(s["expires_at"].timestamp() * 1000)  # JS epoch ms
-        enriched.append(s)
-
-    return render_template("feed.html", sales=enriched)
+    return render_template("feed.html")
 
 
 @app.route("/vendor")
 def vendor():
-    """Vendor dashboard."""
     return render_template("vendor.html")
+
+
+@app.route("/api/sales")
+def api_sales():
+    return jsonify(list(ACTIVE_SALES))
+
+
+@app.route("/api/stats")
+def api_stats():
+    return jsonify(SESSION_STATS)
 
 
 @app.route("/api/calculate", methods=["POST"])
 def api_calculate():
-    """
-    Accepts: { item, qty, original_price, hours_left, vendor_name? }
-    Returns: { suggested_price, discount_pct, broadcast_text, estimated_revenue }
-    """
+    data = request.get_json(force=True) or {}
     try:
-        data         = request.get_json(force=True)
-        item         = str(data.get("item", "Item")).strip() or "Item"
-        qty          = int(data.get("qty", 1))
-        orig_price   = float(data.get("original_price", 100))
-        hours_left   = float(data.get("hours_left", 1))
-        vendor_name  = str(data.get("vendor_name", "EcoPlate Partner")).strip() or "EcoPlate Partner"
+        item           = str(data.get("item",          "")).strip()
+        vendor         = str(data.get("vendor",        "My Restaurant")).strip()
+        qty            = int(data["qty"])
+        original_price = float(data["original_price"])
+        hours_left     = float(data["hours_left"])
+        perishability  = str(data.get("perishability", "Cooked"))
+    except (KeyError, ValueError, TypeError) as exc:
+        return jsonify({"error": f"Invalid input: {exc}"}), 400
 
-        if qty <= 0 or orig_price <= 0 or hours_left <= 0:
-            return jsonify({"error": "qty, original_price, and hours_left must be positive."}), 400
+    if not item:
+        return jsonify({"error": "Item name is required."}), 400
+    if qty <= 0:
+        return jsonify({"error": "Quantity must be greater than 0."}), 400
+    if original_price <= 0:
+        return jsonify({"error": "Original price must be greater than 0."}), 400
+    if hours_left <= 0:
+        return jsonify({"error": "Time left must be greater than 0."}), 400
 
-        pricing        = calculate_optimal_price(orig_price, qty, hours_left)
-        broadcast_text = generate_broadcast_text(
-            item, qty, pricing["suggested_price"],
-            orig_price, hours_left, vendor_name
-        )
+    suggested_price, discount_pct, confidence_score = calculate_optimal_price(
+        original_price, qty, hours_left, perishability
+    )
+    revenue_recovery = round(suggested_price * qty, 2)
 
-        return jsonify({
-            "suggested_price":    pricing["suggested_price"],
-            "discount_pct":       pricing["discount_pct"],
-            "original_price":     orig_price,
-            "estimated_revenue":  round(pricing["suggested_price"] * qty),
-            "broadcast_text":     broadcast_text,
-        })
+    time_label = (
+        "30 minutes" if hours_left <= 0.5 else
+        "1 hour"     if hours_left <= 1.0 else
+        "2 hours"
+    )
+    broadcast_text = (
+        f"EcoPlate Alert! {qty} portions of {item} now available at just Rs.{suggested_price} "
+        f"({discount_pct}% OFF original Rs.{original_price}). "
+        f"Freshly rescued food - pickup within {time_label}. "
+        f"Don't miss out! #EcoPlate #SurplusFood #ZeroWaste"
+    )
 
-    except (ValueError, TypeError) as e:
-        return jsonify({"error": f"Invalid input: {str(e)}"}), 400
+    return jsonify({
+        "suggested_price":  suggested_price,
+        "discount_pct":     discount_pct,
+        "confidence_score": confidence_score,
+        "revenue_recovery": revenue_recovery,
+        "broadcast_text":   broadcast_text,
+    })
 
 
 @app.route("/api/publish", methods=["POST"])
 def api_publish():
-    """
-    Accepts: { item, qty, suggested_price, original_price, discount_pct, hours_left, vendor_name }
-    Appends to ACTIVE_SALES. Returns success + sale_id.
-    """
+    data = request.get_json(force=True) or {}
     try:
-        data = request.get_json(force=True)
+        item            = str(data.get("item",            "")).strip()
+        vendor          = str(data.get("vendor",          "My Restaurant")).strip()
+        qty             = int(data["qty"])
+        original_price  = float(data["original_price"])
+        suggested_price = float(data["suggested_price"])
+        discount_pct    = float(data["discount_pct"])
+        hours_left      = float(data["hours_left"])
+        perishability   = str(data.get("perishability",  "Cooked"))
+        broadcast_text  = str(data.get("broadcast_text", "")).strip()
+    except (KeyError, ValueError, TypeError) as exc:
+        return jsonify({"error": f"Invalid input: {exc}"}), 400
 
-        required = ["item", "qty", "suggested_price", "original_price", "hours_left"]
-        for field in required:
-            if field not in data:
-                return jsonify({"error": f"Missing field: {field}"}), 400
+    if not item:
+        return jsonify({"error": "Item name is required."}), 400
+    if qty <= 0:
+        return jsonify({"error": "Quantity must be greater than 0."}), 400
 
-        hours_left  = float(data["hours_left"])
-        expires_at  = datetime.utcnow() + timedelta(hours=hours_left)
+    now  = time.time()
+    sale = {
+        "id":             str(uuid.uuid4()),
+        "item":           item,
+        "vendor":         vendor or "My Restaurant",
+        "qty":            qty,
+        "original_price": original_price,
+        "suggested_price": suggested_price,
+        "discount_pct":   discount_pct,
+        "perishability":  perishability,
+        "broadcast_text": broadcast_text,
+        "expires_at":     now + hours_left * 3600.0,
+        "published_at":   now,
+    }
+    ACTIVE_SALES.append(sale)
 
-        sale = {
-            "id":             len(ACTIVE_SALES) + 1,
-            "item":           str(data["item"]).strip(),
-            "qty":            int(data["qty"]),
-            "suggested_price":float(data["suggested_price"]),
-            "original_price": float(data["original_price"]),
-            "discount_pct":   int(data.get("discount_pct", 0)),
-            "vendor_name":    str(data.get("vendor_name", "EcoPlate Partner")).strip(),
-            "hours_left":     hours_left,
-            "expires_at":     expires_at,
-        }
+    SESSION_STATS["revenue_recovered"] += suggested_price * qty
+    SESSION_STATS["meals_saved"]       += qty
+    SESSION_STATS["co2_avoided"]       += qty * 2.5
 
-        ACTIVE_SALES.append(sale)
-
-        return jsonify({
-            "success": True,
-            "sale_id": sale["id"],
-            "message": f"'{sale['item']}' is now live on the EcoPlate feed!",
-        })
-
-    except (ValueError, TypeError) as e:
-        return jsonify({"error": f"Invalid input: {str(e)}"}), 400
+    return jsonify({"success": True, "id": sale["id"]})
 
 
-# ---------------------------------------------------------------------------
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
