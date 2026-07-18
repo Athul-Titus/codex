@@ -78,8 +78,8 @@
   .pulse-amber{animation:pamber 2s cubic-bezier(.4,0,.6,1) infinite}
   @keyframes pamber{0%,100%{opacity:1}50%{opacity:.5}}
   .btn-active:active{transform:translateY(2px)}
-  .section-content{display:none}
-  .section-content.active{display:block}
+  .section-content{display:none !important}
+  .section-content.active{display:flex !important}
   .nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:4px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#414944;cursor:pointer;transition:all .15s;text-decoration:none}
   .nav-item:hover{background:#e7e8e8;color:#234f3f}
   .nav-item.active{background:#00261a;color:#fff}
