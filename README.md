@@ -11,17 +11,14 @@
 ## 🚀 Key Features
 
 1. **AI-Powered Dynamic Pricing Engine**
-   - Calculates the optimal clearance price based on:
-     - **Time Urgency:** Steeper discounts as close-of-business approaches.
-     - **Inventory Density:** Responding dynamically to higher excess volumes.
-     - **Perishability Multipliers:** Baked-in safety factor adjustments (Dairy & Cooked meals scale faster than Bakery & Produce items).
-     - **Confidence Score:** Models mock ML prediction assurance.
+   - Leverages **GPT-4o-Mini** (via OpenAI API) in JSON structured mode to calculate optimal, context-aware clearance prices based on the food item name, original price, quantity, perishability, and remaining hours.
+   - **Intelligent Fallback:** Automatically switches to a deterministic mathematical algorithm if no API key is present or the API request fails.
 2. **GPT-4o-Mini Broadcast Assistant**
    - High-quality social copy generation (with emojis & tags) tailored to drive urgency on Instagram, WhatsApp, or Twitter.
 3. **Live Consumer Feed**
    - Automatically polls the server every 9 seconds.
    - Shows active discounts, time-to-close countdowns, and real-time inventory count.
-   - Allows claiming a item instantly, rendering a mock claim ticket & scan code.
+   - Allows claiming an item instantly, rendering a mock claim ticket & scan code.
 4. **Real-time Sustainability & Financial Analytics**
    - Tracks **Revenue Recovered**, **Meals Rescued**, and **CO₂ Avoided** (calculated as `2.5 kg CO₂` per meal rescued).
    - Generates interactive, CSS-rendered charts to visualize:
@@ -43,17 +40,21 @@
 ## 📁 Project Structure
 
 ```
-/ecoplate
-│── app.py                 # Flask server + ML pricing engine + OpenAI integration
-│── requirements.txt       # Dependencies (Flask, OpenAI SDK)
-│── .env                   # Ignored configuration file containing API keys
-│── /templates
-│   ├── vendor.html        # Clean, modern B2B dashboard (tab-switches, forms, widgets)
-│   ├── feed.html          # Clean, modern consumer feed (countdown timer, modals, claim)
-│── /static
-│   ├── /js
-│   │   ├── vendor.js      # Dashboard controller (polling, charts, AI call, toast API)
-│   │   ├── feed.js        # Consumer feed controller (countdown loops, filter chips)
+├── requirements.txt       # Global dependencies for Vercel/Render hosting (Flask, OpenAI, Gunicorn)
+├── vercel.json            # Vercel serverless function routing configuration
+├── api/
+│   └── index.py           # Vercel serverless entry point
+├── ecoplate/
+│   ├── app.py             # Flask server + AI dynamic pricing engine + OpenAI integration
+│   ├── requirements.txt   # Core local project dependencies
+│   ├── .env               # Ignored configuration file containing API keys
+│   ├── /templates
+│   │   ├── vendor.html    # Clean, modern B2B dashboard (tab-switches, forms, widgets)
+│   │   ├── feed.html      # Clean, modern consumer feed (countdown timer, modals, claim)
+│   └── /static
+│       ├── /js
+│       │   ├── vendor.js  # Dashboard controller (polling, charts, AI call, toast API)
+│       │   └── feed.js    # Consumer feed controller (countdown loops, filter chips)
 ```
 
 ---
@@ -70,16 +71,16 @@ pip install -r requirements.txt
 ```
 
 ### 3. API Keys (OpenAI Integration)
-Create a `.env` file in the root of the `/ecoplate` directory:
+Create a `.env` file in the `/ecoplate` directory:
 ```
 OPENAI_API_KEY=your-openai-api-key
 ```
-*Note: If no key is provided, the app gracefully falls back to a deterministic template text generator.*
+*Note: If no key is provided, the app gracefully falls back to the deterministic dynamic pricing algorithm and template text generator.*
 
 ### 4. Start Server
 Run the Flask application:
 ```bash
-python app.py
+python ecoplate/app.py
 ```
 
 Open your browser to:
@@ -88,8 +89,8 @@ Open your browser to:
 
 ---
 
-## 📊 Mock ML Formula
-The dynamic engine applies the following heuristic:
+## 📊 Dynamic Pricing Logic
+When an API key is available, the Clearance Strategy Engine queries `gpt-4o-mini` to compute context-aware pricing. Under fallback conditions, the dynamic engine applies the following heuristic:
 $$\text{Discount} = (\text{Urgency Factor} \times 75\%) \times \text{Perishability Multiplier} \pm 4\% \text{ Random Variance}$$
 Clamped strictly between $15\%$ and $80\%$ maximum clearance discounts.
 * CO₂ impact is mapped as $2.5\text{ kg CO}_{2}\text{e}$ per meal rescued from landfill.
