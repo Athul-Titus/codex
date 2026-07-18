@@ -1,12 +1,12 @@
-﻿// feed.js — EcoPlate Consumer Live Feed
+﻿// feed.js — wired to Stitch-designed feed.html
 
 const PERI_EMOJI = { Dairy:"🥛", Cooked:"🍲", Bakery:"🥐", Produce:"🥬" };
 
-let allSales      = [];
-let activeSort    = "all";
-let cdTimers      = {};   // countdown interval handles keyed by sale id
+let allSales   = [];
+let activeSort = "all";
+let cdTimers   = {};
 
-// ─── FETCH & RENDER ────────────────────────────────────────────────────────────
+// ─── FETCH ────────────────────────────────────────────────────────────────────
 async function fetchSales() {
   try {
     const r = await fetch("/api/sales");
@@ -18,48 +18,40 @@ async function fetchSales() {
 }
 
 function updateCount() {
-  const now    = Date.now() / 1000;
-  const active = allSales.filter(s => s.expires_at > now).length;
-  document.getElementById("deal-count").textContent = active;
+  const now = Date.now() / 1000;
+  document.getElementById("deal-count").textContent =
+    allSales.filter(s => s.expires_at > now).length;
 }
 
-// ─── RENDER ────────────────────────────────────────────────────────────────────
+// ─── RENDER ───────────────────────────────────────────────────────────────────
 function render() {
-  const grid  = document.getElementById("deals-grid");
+  const list  = document.getElementById("deals-list");
   const empty = document.getElementById("empty-state");
 
-  // Clear countdowns
   Object.values(cdTimers).forEach(clearInterval);
   cdTimers = {};
 
   const sales = sorted();
   if (!sales.length) {
-    grid.innerHTML = "";
+    list.innerHTML = "";
     empty.style.display = "";
     return;
   }
   empty.style.display = "none";
-  grid.innerHTML = sales.map(buildCard).join("");
+  list.innerHTML = sales.map(buildCard).join("");
 
-  // Wire claim buttons
-  grid.querySelectorAll(".js-claim").forEach(btn => {
-    btn.addEventListener("click", () => openModal(btn.dataset.id, btn.dataset.name));
+  list.querySelectorAll(".js-claim").forEach(btn => {
+    btn.addEventListener("click", () => openModal(btn.dataset.id, btn.dataset.item, btn.dataset.vendor));
   });
-
-  // Start all countdowns
   sales.forEach(s => startCD(s.id, s.expires_at));
 }
 
 function sorted() {
   const now = Date.now() / 1000;
   let list  = [...allSales];
-
-  if (activeSort === "ending") {
-    list.sort((a, b) => a.expires_at - b.expires_at);
-  } else if (activeSort === "discount") {
-    list.sort((a, b) => b.discount_pct - a.discount_pct);
-  } else {
-    // Default: active first (newest), expired last
+  if (activeSort === "ending")   list.sort((a, b) => a.expires_at - b.expires_at);
+  else if (activeSort === "discount") list.sort((a, b) => b.discount_pct - a.discount_pct);
+  else {
     list.sort((a, b) => {
       const ae = a.expires_at < now, be = b.expires_at < now;
       if (ae !== be) return ae ? 1 : -1;
@@ -69,65 +61,74 @@ function sorted() {
   return list;
 }
 
-// ─── CARD BUILDER ──────────────────────────────────────────────────────────────
+// ─── CARD ─────────────────────────────────────────────────────────────────────
 function buildCard(s) {
   const now     = Date.now() / 1000;
   const expired = s.expires_at < now;
-  const emoji   = PERI_EMOJI[s.perishability] || "🍽️";
   const discRnd = Math.round(s.discount_pct);
 
   return `
-<div class="deal-card${expired ? " expired" : ""}" id="card-${s.id}">
-
-  <!-- Header: emoji + name + badge -->
-  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;gap:.5rem">
-    <div style="display:flex;align-items:center;gap:.6rem;flex:1;min-width:0">
-      <span style="font-size:1.75rem;flex-shrink:0">${emoji}</span>
-      <div style="min-width:0">
-        <div style="font-weight:700;font-size:.9rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.item)}</div>
-        <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.vendor)}</div>
+<article class="bg-[#1e293b] border border-outline/20 rounded-xl overflow-hidden shadow-sm relative${expired ? " opacity-50" : ""}" id="card-${s.id}">
+  <div class="h-32 bg-gray-800 relative w-full flex items-center justify-center">
+    <span class="material-symbols-outlined text-[64px] text-gray-600">${iconFor(s.perishability)}</span>
+    <div class="absolute top-2 left-2 bg-secondary text-on-secondary font-label-sm text-label-sm px-2 py-1 rounded shadow-sm font-bold flex items-center gap-1">
+      <span class="material-symbols-outlined text-[14px]">local_fire_department</span>
+      ${discRnd}% OFF
+    </div>
+    ${expired ? `<div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+      <span class="font-label-mono text-label-mono text-white uppercase tracking-widest">Expired</span>
+    </div>` : ""}
+  </div>
+  <div class="p-4">
+    <div class="flex justify-between items-start mb-2">
+      <div>
+        <h2 class="font-headline-md text-headline-md text-on-surface font-semibold mb-1 text-white" style="font-size:1rem">${esc(s.item)}</h2>
+        <div class="flex items-center gap-1 text-outline">
+          <span class="material-symbols-outlined text-[14px]">storefront</span>
+          <span class="font-label-sm text-label-sm uppercase">${esc(s.vendor)}</span>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="text-secondary font-display-metrics text-[24px] font-bold leading-none mb-1">&#x20B9;${s.suggested_price}</div>
+        <div class="text-outline font-label-mono text-label-mono line-through">&#x20B9;${s.original_price}</div>
       </div>
     </div>
-    <span class="off-badge">${discRnd}% OFF</span>
+    <div class="flex items-center justify-between mt-4 p-3 bg-surface-container-highest/10 rounded-lg border border-outline/10">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined ${expired ? "text-outline" : "text-secondary"} text-[16px]">inventory_2</span>
+        <span class="font-label-sm text-label-sm text-surface-variant">${expired ? "Sold out" : s.qty + " items left"}</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined ${expired ? "text-outline" : "text-secondary"} text-[16px]">timer</span>
+        ${expired
+          ? `<span class="font-label-mono text-label-mono text-outline">Closed</span>`
+          : `<span class="countdown font-label-mono text-label-mono text-secondary pulse-text font-bold" id="cd-${s.id}">...</span>`
+        }
+      </div>
+    </div>
+    <button
+      class="w-full mt-4 font-label-sm text-label-sm py-3 rounded-lg flex items-center justify-center gap-2 shadow-sm js-claim
+        ${expired
+          ? "bg-[#1e293b] text-outline border border-outline/20 cursor-not-allowed"
+          : "bg-primary text-on-primary hover:bg-primary-container transition-colors active:translate-y-px"}"
+      data-id="${s.id}"
+      data-item="${esc(s.item)}"
+      data-vendor="${esc(s.vendor)}"
+      ${expired ? "disabled" : ""}
+    >
+      <span class="material-symbols-outlined text-[18px]">${expired ? "block" : "shopping_cart_checkout"}</span>
+      ${expired ? "Unavailable" : "Claim Now"}
+    </button>
   </div>
-
-  <!-- Pricing -->
-  <div style="display:flex;align-items:baseline;gap:.6rem;margin-bottom:.75rem">
-    <span style="font-size:2rem;font-weight:800;color:#10b981">&#x20B9;${s.suggested_price}</span>
-    <span style="font-size:.85rem;color:rgba(255,255,255,.3);text-decoration:line-through">&#x20B9;${s.original_price}</span>
-  </div>
-
-  <!-- Qty + tag -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-    <span style="font-size:.78rem;font-weight:600;color:${expired ? "rgba(255,255,255,.25)" : "#fb923c"}">
-      ${expired ? "🚫 Sold Out" : `🔥 Only ${s.qty} left!`}
-    </span>
-    <span style="font-size:.7rem;padding:.15rem .5rem;border-radius:99px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.35)">${s.perishability}</span>
-  </div>
-
-  <!-- Countdown -->
-  <div style="display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.04);border-radius:.75rem;padding:.5rem .75rem;margin-bottom:.875rem">
-    <span style="font-size:.85rem">⏱️</span>
-    ${expired
-      ? `<span style="font-size:.75rem;color:rgba(255,255,255,.3)">Expired</span>`
-      : `<span class="countdown" id="cd-${s.id}">Calculating…</span>`
-    }
-  </div>
-
-  <!-- Claim button -->
-  <button
-    class="claim-btn js-claim"
-    data-id="${s.id}"
-    data-name="${esc(s.item)}"
-    ${expired ? "disabled" : ""}
-  >
-    ${expired ? "Expired" : "🛒 Claim Now"}
-  </button>
-
-</div>`;
+</article>`;
 }
 
-// ─── COUNTDOWN ─────────────────────────────────────────────────────────────────
+function iconFor(peri) {
+  const map = { Dairy: "water_drop", Cooked: "soup_kitchen", Bakery: "bakery_dining", Produce: "eco" };
+  return map[peri] || "restaurant";
+}
+
+// ─── COUNTDOWN ───────────────────────────────────────────────────────────────
 function startCD(id, expiresAt) {
   const el = document.getElementById(`cd-${id}`);
   if (!el) return;
@@ -135,55 +136,42 @@ function startCD(id, expiresAt) {
   function tick() {
     const rem = expiresAt - Date.now() / 1000;
     if (rem <= 0) {
-      expireCard(id);
       clearInterval(cdTimers[id]);
+      const card = document.getElementById(`card-${id}`);
+      if (card) card.classList.add("opacity-50");
+      if (el)   el.textContent = "Closed";
       updateCount();
       return;
     }
     const h = Math.floor(rem / 3600);
     const m = Math.floor((rem % 3600) / 60);
     const s = Math.floor(rem % 60);
-    const pad = n => String(n).padStart(2, "0");
-    el.textContent = h > 0
-      ? `${h}h ${pad(m)}m ${pad(s)}s remaining`
-      : `${pad(m)}m ${pad(s)}s remaining`;
+    const p = n => String(n).padStart(2, "0");
+    el.textContent = h > 0 ? `${h}:${p(m)}:${p(s)}` : `${p(m)}:${p(s)}`;
     if (rem < 900) el.classList.add("urgent");
   }
-
   tick();
   cdTimers[id] = setInterval(tick, 1000);
 }
 
-function expireCard(id) {
-  const card = document.getElementById(`card-${id}`);
-  if (!card) return;
-  card.classList.add("expired");
-
-  const btn = card.querySelector(".js-claim");
-  if (btn) { btn.disabled = true; btn.textContent = "Expired"; }
-
-  const qtyEl = card.querySelector("[data-qty]");
-  if (qtyEl) { qtyEl.textContent = "🚫 Sold Out"; qtyEl.style.color = "rgba(255,255,255,.25)"; }
-
-  const cdEl = document.getElementById(`cd-${id}`);
-  if (cdEl) { cdEl.textContent = "Expired"; cdEl.classList.remove("urgent"); }
-}
-
-// ─── FILTER CHIPS ──────────────────────────────────────────────────────────────
+// ─── FILTER CHIPS ─────────────────────────────────────────────────────────────
 [["chip-all","all"],["chip-ending","ending"],["chip-discount","discount"]].forEach(([id, sort]) => {
   document.getElementById(id).addEventListener("click", () => {
-    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
+    document.querySelectorAll("#chip-all,#chip-ending,#chip-discount").forEach(c => {
+      c.className = "bg-[#1e293b] text-surface-variant border border-outline/20 px-4 py-2 rounded-full font-label-sm text-label-sm hover:bg-[#1e293b]/80 transition-colors";
+    });
+    document.getElementById(id).className =
+      "bg-primary text-on-primary border border-primary-container px-4 py-2 rounded-full font-label-sm text-label-sm hover:bg-primary-container transition-colors";
     activeSort = sort;
     render();
   });
 });
 
-// ─── MODAL ─────────────────────────────────────────────────────────────────────
-function openModal(id, name) {
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+function openModal(id, item, vendor) {
   const code = String(Math.floor(1000 + Math.random() * 9000));
-  document.getElementById("pickup-code").textContent = code;
-  document.getElementById("modal-item").textContent  = name;
+  document.getElementById("modal-item-name").textContent = item + " at " + vendor;
+  document.getElementById("modal-order-id").textContent  = "Order ID: #ECP-" + code;
   document.getElementById("claim-modal").classList.add("open");
 }
 
@@ -193,13 +181,12 @@ document.getElementById("claim-modal").addEventListener("click", e => {
 });
 function closeModal() { document.getElementById("claim-modal").classList.remove("open"); }
 
-// ─── UTILS ─────────────────────────────────────────────────────────────────────
 function esc(s) {
   return String(s)
     .replace(/&/g,"&amp;").replace(/</g,"&lt;")
     .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
-// ─── INIT ──────────────────────────────────────────────────────────────────────
+// ─── INIT ─────────────────────────────────────────────────────────────────────
 fetchSales();
-setInterval(fetchSales, 9000);   // poll every 9 s
+setInterval(fetchSales, 9000);
