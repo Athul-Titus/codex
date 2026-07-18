@@ -280,7 +280,7 @@ async function loadAnalytics() {
       <div class="flex justify-between py-2"><span class="text-on-surface-variant">AI Recovery Potential</span><span class="font-bold text-primary">₹${Math.round(totalRecov).toLocaleString("en-IN")}</span></div>
     `;
 
-    // Discount distribution bar chart
+    // ── Discount distribution bar chart (pixel heights) ──────────────────────
     const brackets = [0, 0, 0, 0];
     sales.forEach(s => {
       const d = s.discount_pct;
@@ -289,25 +289,29 @@ async function loadAnalytics() {
       else if (d <= 70) brackets[2]++;
       else              brackets[3]++;
     });
-    const maxB = Math.max(...brackets, 1);
+    const maxB    = Math.max(...brackets, 1);
+    const BAR_MAX = 110; // px
+    const discLabels = ["<30%", "30–50%", "50–70%", "70%+"];
+    const discColors = ["#a2d1bb", "#3b6756", "#00261a", "#b8130e"];
     document.getElementById("disc-chart").innerHTML = brackets.map((v, i) => {
-      const h = Math.max(4, Math.round((v / maxB) * 100));
-      return `<div class="flex-1 flex flex-col items-center justify-end gap-1 h-full">
-        <span class="font-label-mono text-label-mono text-primary" style="font-size:10px">${v}</span>
-        <div class="w-full bg-primary rounded-t" style="height:${h}%" title="${v} sales"></div>
+      const h = Math.max(6, Math.round((v / maxB) * BAR_MAX));
+      return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;padding-bottom:6px;">
+        <span style="font-size:12px;font-weight:700;color:${discColors[i]}">${v}</span>
+        <div style="width:100%;background:${discColors[i]};height:${h}px;border-radius:5px 5px 0 0;transition:height .5s ease;" title="${v} sale(s)"></div>
+        <span style="font-size:9px;color:#717974;text-align:center;">${discLabels[i]}</span>
       </div>`;
     }).join("");
-    document.getElementById("disc-labels").innerHTML =
-      `<span class="flex-1 text-center">&lt;30%</span>
-       <span class="flex-1 text-center">30-50%</span>
-       <span class="flex-1 text-center">50-70%</span>
-       <span class="flex-1 text-center">70%+</span>`;
+    // Remove old separate labels row (now embedded in bars)
+    const labelsEl = document.getElementById("disc-labels");
+    if (labelsEl) labelsEl.innerHTML = "";
 
-    // Category breakdown
-    const cats = {};
+    // ── Category breakdown (horizontal progress bars) ─────────────────────────
+    const cats      = {};
+    const catColors = { Cooked:"#00261a", Dairy:"#3b6756", Bakery:"#a2d1bb", Produce:"#b8130e" };
+    const catEmoji  = { Cooked:"🍲", Dairy:"🥛", Bakery:"🥐", Produce:"🥬" };
     sales.forEach(s => { cats[s.perishability] = (cats[s.perishability] || 0) + s.qty; });
-    const maxC = Math.max(...Object.values(cats), 1);
-    document.getElementById("cat-chart").innerHTML = ["Cooked","Dairy","Bakery","Produce"].map(cat => {
+    const totalUnits = Object.values(cats).reduce((a, v) => a + v, 0) || 1;
+    document.getElementById("cat-chart").innerHTML = ["Cooked", "Dairy", "Bakery", "Produce"].map(cat => {
       const count = cats[cat] || 0;
       const pct   = (count / maxC) * 100;
       return `<div class="space-y-1">
