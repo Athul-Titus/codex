@@ -132,15 +132,21 @@
     <div class="flex-1 max-w-sm mx-6 hidden md:block">
       <div class="relative flex items-center">
         <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[18px]">search</span>
-        <input id="global-search" class="w-full bg-surface-container-low border border-outline-variant rounded py-1.5 pl-9 pr-3 text-body-md focus:outline-none focus:border-primary" placeholder="Search inventory..." type="text" oninput="handleSearch(this.value)"/>
+        <input id="global-search" class="w-full bg-surface-container-low border border-outline-variant rounded py-1.5 pl-9 pr-3 text-body-md focus:outline-none focus:border-primary" placeholder="Search inventory..." type="text"/>
       </div>
     </div>
     <div class="flex items-center gap-3">
-      <button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full relative">
-        <span class="material-symbols-outlined">notifications</span>
-        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-secondary-container rounded-full"></span>
-      </button>
-      <button onclick="goSection('dashboard');focusForm()" class="font-label-sm text-label-sm bg-primary text-on-primary px-4 py-1.5 rounded hover:bg-surface-tint transition-colors btn-active flex items-center gap-1">
+      <div class="relative">
+        <button id="bell-btn" class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full relative">
+          <span class="material-symbols-outlined">notifications</span>
+          <span id="bell-dot" class="hidden absolute top-1.5 right-1.5 w-2 h-2 bg-secondary-container rounded-full"></span>
+        </button>
+        <div id="bell-dropdown" class="hidden absolute right-0 top-10 w-64 bg-surface border border-outline-variant rounded-lg shadow-lg z-50 overflow-hidden">
+          <div class="px-3 py-2 bg-surface-container-lowest border-b border-outline-variant font-label-mono text-label-mono text-on-surface-variant uppercase">Recent Broadcasts</div>
+          <div id="notif-list"></div>
+        </div>
+      </div>
+      <button onclick="focusForm()" class="font-label-sm text-label-sm bg-primary text-on-primary px-4 py-1.5 rounded hover:bg-surface-tint transition-colors btn-active flex items-center gap-1">
         <span class="material-symbols-outlined text-[16px]">add</span> New Entry
       </button>
     </div>
