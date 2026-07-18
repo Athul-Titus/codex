@@ -41,10 +41,10 @@ function goSection(sectionId) {
   };
   document.getElementById("page-title").textContent = TITLES[sectionId] || "Vendor Portal";
 
-  // Scroll main content to top
+  // Scroll to top: both the inner container and the window
+  const mc = document.getElementById("main-content");
+  if (mc) mc.scrollTop = 0;
   window.scrollTo({ top: 0, behavior: "smooth" });
-  const mainEl = document.querySelector("main");
-  if (mainEl) mainEl.scrollTo({ top: 0, behavior: "smooth" });
 
   if (sectionId === "inventory")      loadInventory();
   if (sectionId === "marketplace")    loadMarketplaceStats();
