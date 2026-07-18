@@ -1,343 +1,417 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EcoPlate — Vendor Portal</title>
-  <meta name="description" content="EcoPlate Vendor Portal: AI-powered dynamic pricing to recover revenue from surplus food and reduce waste." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
-    body { background: #060e14; min-height: 100vh; }
-
-    .glass { background: rgba(16,185,129,.06); backdrop-filter: blur(14px); border: 1px solid rgba(16,185,129,.18); }
-    .glass-card { background: rgba(255,255,255,.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.08); }
-
-    .input-field {
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.1);
-      color: #fff;
-      transition: all .2s;
-      width: 100%;
-      border-radius: .75rem;
-      padding: .625rem 1rem;
-      font-size: .875rem;
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EcoPlate B2B Terminal — Vendor Dashboard</title>
+<meta name="description" content="EcoPlate Vendor Portal: AI-powered dynamic pricing to recover revenue from surplus food and reduce waste." />
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Space+Mono:wght@500&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-secondary-fixed": "#410000",
+          "primary-fixed": "#beedd7",
+          "surface-tint": "#3b6756",
+          "on-secondary-fixed-variant": "#930002",
+          "on-tertiary-fixed-variant": "#214f41",
+          "surface-variant": "#e1e3e3",
+          "surface-dim": "#d9dada",
+          "error-container": "#ffdad6",
+          "on-secondary-container": "#fffbff",
+          "primary-fixed-dim": "#a2d1bb",
+          "on-primary": "#ffffff",
+          "on-surface": "#191c1c",
+          "on-tertiary-fixed": "#002118",
+          "surface-container-high": "#e7e8e8",
+          "inverse-primary": "#a2d1bb",
+          "on-background": "#191c1c",
+          "on-tertiary-container": "#7aa897",
+          "on-primary-fixed-variant": "#234f3f",
+          "on-error-container": "#93000a",
+          "on-secondary": "#ffffff",
+          "on-tertiary": "#ffffff",
+          "outline": "#717974",
+          "secondary-container": "#dc3225",
+          "tertiary": "#00261c",
+          "primary-container": "#0f3d2e",
+          "surface-container-low": "#f3f4f4",
+          "tertiary-fixed": "#bcedda",
+          "tertiary-fixed-dim": "#a1d1bf",
+          "primary": "#00261a",
+          "error": "#ba1a1a",
+          "on-error": "#ffffff",
+          "on-surface-variant": "#414944",
+          "inverse-surface": "#2e3131",
+          "on-primary-fixed": "#002116",
+          "surface-container-highest": "#e1e3e3",
+          "outline-variant": "#c0c8c3",
+          "surface": "#f8f9f9",
+          "surface-container-lowest": "#ffffff",
+          "secondary-fixed": "#ffdad5",
+          "surface-bright": "#f8f9f9",
+          "background": "#f8f9f9",
+          "secondary": "#b8130e",
+          "inverse-on-surface": "#f0f1f1",
+          "secondary-fixed-dim": "#ffb4a9",
+          "on-primary-container": "#7ba894",
+          "surface-container": "#edeeee",
+          "tertiary-container": "#0c3d30"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "stack-gap-sm": "8px",
+          "stack-gap-lg": "32px",
+          "container-padding": "24px",
+          "gutter": "16px",
+          "stack-gap-md": "16px",
+          "sidebar-width": "260px",
+          "unit": "4px"
+        },
+        "fontFamily": {
+          "label-sm": ["Geist"],
+          "display-metrics": ["Geist"],
+          "headline-md": ["Geist"],
+          "headline-lg-mobile": ["Geist"],
+          "body-md": ["Geist"],
+          "headline-lg": ["Geist"],
+          "body-lg": ["Geist"],
+          "label-mono": ["Space Mono"]
+        },
+        "fontSize": {
+          "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+          "display-metrics": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+          "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+          "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+          "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+          "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+          "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+          "label-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+        }
+      }
     }
-    .input-field:focus { background: rgba(16,185,129,.08); border-color: rgba(16,185,129,.5); outline: none; box-shadow: 0 0 0 3px rgba(16,185,129,.1); }
-    .input-field option { background: #0d1f2d; color: #fff; }
-    .input-field::placeholder { color: rgba(255,255,255,.25); }
-
-    .btn-green {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #fff; font-weight: 600; font-size: .875rem;
-      border-radius: .75rem; padding: .75rem 1.5rem;
-      border: none; cursor: pointer; width: 100%;
-      display: flex; align-items: center; justify-content: center; gap: .5rem;
-      transition: all .2s;
-    }
-    .btn-green:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(16,185,129,.35); }
-    .btn-green:active { transform: translateY(0); }
-    .btn-green:disabled { opacity: .5; transform: none; box-shadow: none; cursor: not-allowed; }
-
-    .btn-ghost {
-      background: transparent; color: rgba(255,255,255,.4);
-      font-size: .875rem; font-weight: 500;
-      border-radius: .75rem; padding: .75rem 1.5rem;
-      border: 1px solid rgba(255,255,255,.1); cursor: pointer; width: 100%;
-      transition: all .2s;
-    }
-    .btn-ghost:hover { border-color: rgba(16,185,129,.4); color: #10b981; }
-
-    .skeleton {
-      background: linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(255,255,255,.09) 50%, rgba(255,255,255,.04) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-      border-radius: .75rem;
-    }
-    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
-
-    .pulse-dot { width:8px; height:8px; border-radius:50%; background:#10b981; animation:pdot 2s infinite; }
-    @keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.6)} }
-
-    .toast {
-      position:fixed; bottom:1.5rem; right:1.5rem; z-index:9999;
-      transform:translateY(80px); opacity:0;
-      transition:all .35s cubic-bezier(.34,1.56,.64,1);
-    }
-    .toast.show { transform:translateY(0); opacity:1; }
-
-    .sparkbar-wrap { display:flex; align-items:flex-end; gap:5px; height:44px; }
-    .sparkbar {
-      flex:1; border-radius:4px 4px 0 0; min-height:4px;
-      background: linear-gradient(180deg, #10b981, #059669);
-      transition: height .5s ease;
-      position:relative; cursor:default;
-    }
-    .sparkbar:hover::after {
-      content:attr(data-tip);
-      position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%);
-      background:#10b981; color:#fff; font-size:10px; padding:2px 7px;
-      border-radius:4px; white-space:nowrap; pointer-events:none;
-    }
-
-    .stat-strip { position:relative; overflow:hidden; }
-    .stat-strip::after {
-      content:''; position:absolute; top:0; left:0; right:0; height:2px;
-      background:linear-gradient(90deg,transparent,#10b981,transparent);
-    }
-
-    .spin { animation: spin .7s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    label { display:block; font-size:.8125rem; color:rgba(255,255,255,.45); margin-bottom:.375rem; }
-  </style>
+  }
+</script>
+<style>
+  .skeleton-shimmer {
+    background: linear-gradient(90deg, #edeeee 25%, #e7e8e8 50%, #edeeee 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+  .pulse-amber { animation: pulse-amber-anim 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+  @keyframes pulse-amber-anim { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+  .btn-active:active { box-shadow: inset 0px -2px 0px rgba(0,0,0,0.2); transform: translateY(2px); }
+  .toast { position:fixed; bottom:1.5rem; right:1.5rem; z-index:9999; transform:translateY(80px); opacity:0; transition:all .35s cubic-bezier(.34,1.56,.64,1); }
+  .toast.show { transform:translateY(0); opacity:1; }
+  .spin { animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
 </head>
-<body>
+<body class="bg-background text-on-background font-body-md min-h-screen flex antialiased">
 
-<!-- NAV -->
-<nav class="glass sticky top-0 z-50" style="border-bottom:1px solid rgba(16,185,129,.2)">
-  <div style="max-width:1200px;margin:0 auto;padding:.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
-    <!-- Logo -->
-    <div style="display:flex;align-items:center;gap:.75rem">
-      <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#34d399,#059669);display:flex;align-items:center;justify-content:center;font-size:1.2rem">🌿</div>
-      <div>
-        <span style="font-size:1.2rem;font-weight:800;color:#fff">EcoPlate</span>
-        <span style="margin-left:.5rem;font-size:.7rem;color:#10b981;background:rgba(16,185,129,.12);padding:.2rem .6rem;border-radius:99px;font-weight:600">Vendor Portal</span>
-      </div>
-    </div>
-
-    <!-- Stats -->
-    <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
-      <div class="stat-strip glass-card" style="border-radius:12px;padding:.5rem 1rem;text-align:center;min-width:100px">
-        <div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:.2rem">Revenue Recovered</div>
-        <div id="stat-revenue" style="font-size:1.1rem;font-weight:800;color:#10b981">&#x20B9;0</div>
-      </div>
-      <div class="stat-strip glass-card" style="border-radius:12px;padding:.5rem 1rem;text-align:center;min-width:80px">
-        <div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:.2rem">Meals Saved</div>
-        <div id="stat-meals" style="font-size:1.1rem;font-weight:800;color:#6ee7b7">0</div>
-      </div>
-      <div class="stat-strip glass-card" style="border-radius:12px;padding:.5rem 1rem;text-align:center;min-width:90px">
-        <div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:.2rem">CO&#x2082; Avoided</div>
-        <div id="stat-co2" style="font-size:1.1rem;font-weight:800;color:#5eead4">0 kg</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:.4rem">
-        <div class="pulse-dot"></div>
-        <span style="font-size:.75rem;color:#10b981;font-weight:600">Live</span>
-      </div>
+<!-- Sidebar -->
+<nav class="hidden md:flex flex-col p-stack-gap-md h-full bg-surface-container border-r border-outline-variant fixed left-0 top-0 w-sidebar-width z-20">
+  <div class="flex items-center gap-3 mb-8 px-2">
+    <div class="w-8 h-8 rounded-DEFAULT bg-primary flex items-center justify-center text-on-primary font-bold text-sm">🌿</div>
+    <div>
+      <h1 class="font-headline-md text-headline-md text-primary" style="font-size:1rem">EcoPlate B2B</h1>
+      <p class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Climate-Tech Terminal</p>
     </div>
   </div>
+  <button class="w-full bg-primary text-on-primary py-2 px-4 rounded-DEFAULT font-label-sm text-label-sm uppercase tracking-wider mb-6 hover:bg-surface-tint transition-colors btn-active flex items-center justify-center gap-2">
+    <span class="material-symbols-outlined">campaign</span> Broadcast Deals
+  </button>
+  <ul class="flex-1 space-y-2">
+    <li><a class="flex items-center gap-3 px-3 py-2 bg-primary text-on-primary rounded-lg font-label-sm text-label-sm uppercase tracking-wider" href="#">
+      <span class="material-symbols-outlined">dashboard</span> Dashboard
+    </a></li>
+    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest hover:text-primary-fixed-variant transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="#">
+      <span class="material-symbols-outlined">inventory_2</span> Inventory
+    </a></li>
+    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest hover:text-primary-fixed-variant transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="#">
+      <span class="material-symbols-outlined">storefront</span> Marketplace
+    </a></li>
+    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest hover:text-primary-fixed-variant transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="#">
+      <span class="material-symbols-outlined">monitoring</span> Analytics
+    </a></li>
+    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest hover:text-primary-fixed-variant transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="#">
+      <span class="material-symbols-outlined">eco</span> Sustainability
+    </a></li>
+  </ul>
+  <ul class="mt-auto space-y-2 border-t border-outline-variant pt-4">
+    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="#">
+      <span class="material-symbols-outlined">help</span> Support
+    </a></li>
+    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="#">
+      <span class="material-symbols-outlined">settings</span> Settings
+    </a></li>
+    <li><a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest transition-all font-label-sm text-label-sm uppercase tracking-wider rounded-DEFAULT" href="/">
+      <span class="material-symbols-outlined">open_in_new</span> Consumer Feed
+    </a></li>
+  </ul>
 </nav>
 
-<!-- MAIN -->
-<main style="max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem">
+<!-- Main -->
+<main class="flex-1 ml-0 md:ml-[260px] min-h-screen flex flex-col">
 
-  <!-- Hero -->
-  <div style="margin-bottom:2rem">
-    <h1 style="font-size:1.875rem;font-weight:800;color:#fff;margin:0 0 .5rem">Rescue Your Surplus Food</h1>
-    <p style="color:rgba(255,255,255,.4);margin:0;font-size:.9rem">AI-powered pricing that maximises revenue while minimising waste — in seconds.</p>
-  </div>
+  <!-- Top Bar -->
+  <header class="flex justify-between items-center w-full px-container-padding h-16 bg-surface border-b border-outline-variant sticky top-0 z-10">
+    <div class="flex items-center gap-4">
+      <h2 class="font-headline-md text-headline-md font-bold text-primary hidden md:block" style="font-size:1.1rem">Vendor Portal</h2>
+    </div>
+    <div class="flex-1 max-w-md mx-8 hidden md:block">
+      <div class="relative flex items-center">
+        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant">search</span>
+        <input class="w-full bg-surface-container-low border border-outline-variant rounded-DEFAULT py-1.5 pl-10 pr-4 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Search inventory, analytics..." type="text"/>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors relative">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-secondary-container rounded-full"></span>
+      </button>
+      <button class="font-label-sm text-label-sm bg-primary text-on-primary px-4 py-1.5 rounded-DEFAULT hover:bg-surface-tint transition-colors btn-active flex items-center gap-1">
+        <span class="material-symbols-outlined text-[16px]">add</span> New Entry
+      </button>
+    </div>
+  </header>
 
-  <div style="display:grid;grid-template-columns:1fr 320px;gap:1.5rem;align-items:start">
+  <div class="p-container-padding flex-1 flex flex-col gap-stack-lg overflow-y-auto">
 
-    <!-- LEFT COLUMN -->
-    <div>
+    <!-- Metrics Strip -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+      <div class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col gap-1">
+        <div class="flex justify-between items-center text-on-surface-variant mb-1">
+          <span class="font-label-mono text-label-mono uppercase">Revenue Recovered</span>
+          <span class="material-symbols-outlined text-[16px]">payments</span>
+        </div>
+        <div class="font-display-metrics text-display-metrics text-primary tabular-nums" id="stat-revenue">&#x20B9;0</div>
+      </div>
+      <div class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col gap-1">
+        <div class="flex justify-between items-center text-on-surface-variant mb-1">
+          <span class="font-label-mono text-label-mono uppercase">Meals Saved</span>
+          <span class="material-symbols-outlined text-[16px]">restaurant</span>
+        </div>
+        <div class="font-display-metrics text-display-metrics text-primary tabular-nums" id="stat-meals">0</div>
+      </div>
+      <div class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col gap-1 relative overflow-hidden">
+        <div class="absolute -right-4 -bottom-4 opacity-10 text-primary">
+          <span class="material-symbols-outlined text-[100px]">eco</span>
+        </div>
+        <div class="flex justify-between items-center text-on-surface-variant mb-1 relative z-10">
+          <span class="font-label-mono text-label-mono uppercase">CO&#x2082; Avoided</span>
+          <span class="material-symbols-outlined text-[16px]">co2</span>
+        </div>
+        <div class="font-display-metrics text-display-metrics text-primary tabular-nums relative z-10" id="stat-co2">0 <span class="text-headline-md text-on-surface-variant font-normal">kg</span></div>
+      </div>
+    </section>
 
-      <!-- FORM -->
-      <div id="form-section" class="glass-card" style="border-radius:1.25rem;padding:1.75rem;margin-bottom:1.25rem">
-        <h2 style="font-size:1rem;font-weight:700;color:#fff;margin:0 0 1.25rem;display:flex;align-items:center;gap:.5rem">
-          <span style="color:#10b981">⚡</span> New Surplus Listing
-        </h2>
-        <form id="pricing-form" novalidate>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
-            <div>
-              <label for="f-item">Item Name *</label>
-              <input id="f-item" class="input-field" type="text" placeholder="e.g. Paneer Butter Masala" />
+    <!-- Main Workspace -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-gutter flex-1">
+
+      <!-- Left: Input Card -->
+      <div class="lg:col-span-5 bg-surface border border-outline-variant rounded-lg flex flex-col">
+        <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest rounded-t-lg">
+          <h3 class="font-label-mono text-label-mono uppercase text-on-surface">Surplus Entry</h3>
+          <span class="material-symbols-outlined text-on-surface-variant text-[18px]">add_box</span>
+        </div>
+
+        <!-- Form -->
+        <div id="form-section" class="p-container-padding flex-1 flex flex-col gap-stack-md">
+          <div class="space-y-1">
+            <label class="font-label-sm text-label-sm text-on-surface-variant block">Item Name *</label>
+            <input id="f-item" class="w-full bg-surface-bright border border-outline-variant rounded-DEFAULT px-3 py-2 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="e.g. Sourdough Loaves, Mixed Salads..." type="text"/>
+          </div>
+          <div class="space-y-1">
+            <label class="font-label-sm text-label-sm text-on-surface-variant block">Restaurant / Vendor *</label>
+            <input id="f-vendor" class="w-full bg-surface-bright border border-outline-variant rounded-DEFAULT px-3 py-2 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="e.g. Hotel Abad Plaza" type="text"/>
+          </div>
+          <div class="grid grid-cols-2 gap-gutter">
+            <div class="space-y-1">
+              <label class="font-label-sm text-label-sm text-on-surface-variant block">Quantity *</label>
+              <div class="relative">
+                <input id="f-qty" class="w-full bg-surface-bright border border-outline-variant rounded-DEFAULT px-3 py-2 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all pr-12" placeholder="0" type="number" min="1"/>
+                <span class="absolute right-3 top-2 text-on-surface-variant text-body-md">units</span>
+              </div>
             </div>
-            <div>
-              <label for="f-vendor">Restaurant / Vendor *</label>
-              <input id="f-vendor" class="input-field" type="text" placeholder="e.g. Hotel Abad Plaza" />
+            <div class="space-y-1">
+              <label class="font-label-sm text-label-sm text-on-surface-variant block">Original Price *</label>
+              <div class="relative">
+                <span class="absolute left-3 top-2 text-on-surface-variant text-body-md">&#x20B9;</span>
+                <input id="f-price" class="w-full bg-surface-bright border border-outline-variant rounded-DEFAULT px-3 py-2 pl-8 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="0.00" type="number" min="1"/>
+              </div>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem">
-            <div>
-              <label for="f-qty">Quantity (portions) *</label>
-              <input id="f-qty" class="input-field" type="number" min="1" placeholder="e.g. 10" />
-            </div>
-            <div>
-              <label for="f-price">Original Price (&#x20B9;) *</label>
-              <input id="f-price" class="input-field" type="number" min="1" placeholder="e.g. 250" />
-            </div>
-            <div>
-              <label for="f-peri">Perishability</label>
-              <select id="f-peri" class="input-field">
-                <option value="Cooked">Cooked</option>
-                <option value="Dairy">Dairy</option>
-                <option value="Bakery">Bakery</option>
-                <option value="Produce">Produce</option>
-              </select>
-            </div>
-          </div>
-          <div style="margin-bottom:1.25rem">
-            <label for="f-hours">Time Left to Sell</label>
-            <select id="f-hours" class="input-field">
-              <option value="0.5">30 minutes</option>
-              <option value="1">1 hour</option>
-              <option value="2">2 hours</option>
+          <div class="space-y-1">
+            <label class="font-label-sm text-label-sm text-on-surface-variant block">Time-to-Close (Expiry Window)</label>
+            <select id="f-hours" class="w-full bg-surface-bright border border-outline-variant rounded-DEFAULT px-3 py-2 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+              <option value="0.5">30 Minutes</option>
+              <option value="1">1 Hour</option>
+              <option value="2">2 Hours</option>
             </select>
           </div>
-          <button type="submit" id="submit-btn" class="btn-green">
-            <span>&#x1F916;</span> Calculate AI Price
-          </button>
-        </form>
-      </div>
-
-      <!-- SKELETON -->
-      <div id="skeleton-section" style="display:none" class="glass-card" style="border-radius:1.25rem;padding:1.75rem;margin-bottom:1.25rem">
-        <div class="glass-card" style="border-radius:1.25rem;padding:1.75rem">
-          <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
-            <div class="skeleton" style="width:24px;height:24px;border-radius:50%"></div>
-            <div class="skeleton" style="width:200px;height:16px"></div>
+          <div class="space-y-2">
+            <label class="font-label-sm text-label-sm text-on-surface-variant block">Perishability Tags</label>
+            <div class="flex flex-wrap gap-2">
+              <label class="cursor-pointer">
+                <input class="peer sr-only" type="radio" name="perishability" value="Cooked" checked/>
+                <div class="px-3 py-1 border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface-variant peer-checked:bg-primary peer-checked:text-on-primary peer-checked:border-primary transition-colors">Cooked</div>
+              </label>
+              <label class="cursor-pointer">
+                <input class="peer sr-only" type="radio" name="perishability" value="Dairy"/>
+                <div class="px-3 py-1 border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface-variant peer-checked:bg-primary peer-checked:text-on-primary peer-checked:border-primary transition-colors">Dairy</div>
+              </label>
+              <label class="cursor-pointer">
+                <input class="peer sr-only" type="radio" name="perishability" value="Bakery"/>
+                <div class="px-3 py-1 border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface-variant peer-checked:bg-primary peer-checked:text-on-primary peer-checked:border-primary transition-colors">Bakery</div>
+              </label>
+              <label class="cursor-pointer">
+                <input class="peer sr-only" type="radio" name="perishability" value="Produce"/>
+                <div class="px-3 py-1 border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface-variant peer-checked:bg-primary peer-checked:text-on-primary peer-checked:border-primary transition-colors">Produce</div>
+              </label>
+            </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.5rem">
-            <div class="skeleton" style="height:48px;width:100%"></div>
-            <div class="skeleton" style="height:48px;width:75%"></div>
-            <div class="skeleton" style="height:48px;width:88%"></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:.75rem">
-            <div style="width:16px;height:16px;border:2px solid #10b981;border-top-color:transparent;border-radius:50%" class="spin"></div>
-            <span id="skel-caption" style="font-size:.8125rem;color:#10b981;font-weight:500">Analyzing historical footfall...</span>
+          <div class="mt-auto pt-4">
+            <button class="w-full bg-primary text-on-primary py-3 px-4 rounded-DEFAULT font-label-sm text-label-sm uppercase tracking-wider hover:bg-surface-tint transition-colors btn-active flex justify-center items-center gap-2" id="calculateBtn">
+              <span class="material-symbols-outlined">model_training</span>
+              Calculate Optimal Clearance Strategy
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- RESULT -->
-      <div id="result-section" style="display:none">
-        <div class="glass-card" style="border-radius:1.25rem;padding:1.75rem;border:1px solid rgba(16,185,129,.25);margin-bottom:1rem">
-          <!-- Header -->
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.5rem">
-            <h2 style="font-size:1rem;font-weight:700;color:#fff;margin:0;display:flex;align-items:center;gap:.5rem">
-              &#x2705; AI Pricing Result
-            </h2>
-            <div style="display:flex;align-items:center;gap:.4rem">
-              <div style="width:7px;height:7px;border-radius:50%;background:#10b981;animation:pdot 2s infinite"></div>
-              <span style="font-size:.75rem;color:#10b981;font-weight:500">Model confidence: <strong id="res-conf">--</strong>%</span>
+      <!-- Right: AI Result Card -->
+      <div class="lg:col-span-7 bg-surface-bright border border-outline-variant rounded-lg relative overflow-hidden flex flex-col min-h-[400px]">
+        <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest z-10">
+          <h3 class="font-label-mono text-label-mono uppercase text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-[16px] text-primary">auto_awesome</span>
+            Strategy Engine
+          </h3>
+          <div class="flex items-center gap-2">
+            <div class="px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed-variant rounded-DEFAULT font-label-mono text-[10px] uppercase border border-secondary-fixed-dim pulse-amber" id="conf-badge" style="display:none">
+              Model confidence: <span id="res-conf">87</span>%
             </div>
           </div>
-
-          <!-- Price grid -->
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.25rem">
-            <div class="glass" style="border-radius:.875rem;padding:1rem;text-align:center">
-              <div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:.3rem">Original Price</div>
-              <div id="res-orig" style="font-size:1.3rem;font-weight:700;color:rgba(255,255,255,.35);text-decoration:line-through">&#x20B9;0</div>
-            </div>
-            <div class="glass" style="border-radius:.875rem;padding:1rem;text-align:center;border:1px solid rgba(16,185,129,.4)">
-              <div style="font-size:.7rem;color:#10b981;margin-bottom:.3rem">AI Suggested</div>
-              <div id="res-price" style="font-size:1.5rem;font-weight:800;color:#10b981">&#x20B9;0</div>
-            </div>
-            <div class="glass" style="border-radius:.875rem;padding:1rem;text-align:center">
-              <div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:.3rem">Discount</div>
-              <div id="res-disc" style="font-size:1.5rem;font-weight:800;color:#fb923c">0%</div>
-            </div>
-          </div>
-
-          <!-- Revenue bar -->
-          <div class="glass" style="border-radius:.875rem;padding:1rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
-            <div>
-              <div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:.2rem">Estimated Revenue Recovery</div>
-              <div id="res-rev" style="font-size:1.75rem;font-weight:800;color:#fff">&#x20B9;0</div>
-            </div>
-            <span style="font-size:2.5rem">&#x1F4B0;</span>
-          </div>
-
-          <!-- Broadcast textarea -->
-          <div style="margin-bottom:1rem">
-            <label for="broadcast-txt" style="color:rgba(255,255,255,.5);font-size:.8rem;margin-bottom:.4rem;display:block">&#x1F4E2; Broadcast Copy <span style="color:rgba(255,255,255,.25)">(editable before publishing)</span></label>
-            <textarea id="broadcast-txt" rows="3" class="input-field" style="resize:vertical;line-height:1.6"></textarea>
-          </div>
-
-          <!-- Publish button -->
-          <button id="publish-btn" class="btn-green">
-            &#x1F4E1; Publish to Live Feed &amp; Copy to Clipboard
-          </button>
         </div>
 
-        <button id="new-btn" class="btn-ghost">+ Start New Listing</button>
-      </div>
-
-    </div><!-- /left -->
-
-    <!-- RIGHT COLUMN -->
-    <div style="display:flex;flex-direction:column;gap:1.25rem">
-
-      <!-- Sparkline -->
-      <div class="glass-card" style="border-radius:1.25rem;padding:1.25rem">
-        <div style="font-size:.875rem;font-weight:700;color:#fff;margin-bottom:.25rem;display:flex;align-items:center;gap:.4rem">
-          &#x1F4CA; Last 5 Discount Rates
-        </div>
-        <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-bottom:1rem">Live from your session</div>
-        <div id="sparkline" class="sparkbar-wrap">
-          <div style="font-size:.75rem;color:rgba(255,255,255,.25);text-align:center;width:100%">No listings yet</div>
-        </div>
-        <div id="spark-labels" style="display:flex;gap:5px;margin-top:.4rem"></div>
-      </div>
-
-      <!-- Model factors -->
-      <div class="glass-card" style="border-radius:1.25rem;padding:1.25rem">
-        <div style="font-size:.875rem;font-weight:700;color:#fff;margin-bottom:1rem;display:flex;align-items:center;gap:.4rem">
-          &#x1F9E0; Model Factors
-        </div>
-        <div style="display:flex;flex-direction:column;gap:.875rem">
-          <div style="display:flex;gap:.75rem;align-items:flex-start">
-            <div style="width:28px;height:28px;border-radius:8px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem">&#x23F0;</div>
-            <div>
-              <div style="font-size:.8rem;font-weight:600;color:#fff">Urgency Factor</div>
-              <div style="font-size:.72rem;color:rgba(255,255,255,.35);margin-top:.15rem">&lt;30 min triggers aggressive pricing</div>
+        <!-- Skeleton -->
+        <div class="absolute inset-0 top-[53px] bg-surface-bright z-10 flex flex-col items-center justify-center p-8 transition-opacity duration-500" id="aiSkeleton">
+          <div class="w-full max-w-md space-y-4">
+            <div class="h-4 w-3/4 skeleton-shimmer rounded-DEFAULT mx-auto"></div>
+            <div class="h-24 w-full skeleton-shimmer rounded-lg"></div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="h-16 skeleton-shimmer rounded-lg"></div>
+              <div class="h-16 skeleton-shimmer rounded-lg"></div>
+            </div>
+            <div class="text-center mt-6">
+              <p class="font-label-mono text-label-mono text-on-surface-variant animate-pulse" id="skeletonCaption">Waiting for input...</p>
             </div>
           </div>
-          <div style="display:flex;gap:.75rem;align-items:flex-start">
-            <div style="width:28px;height:28px;border-radius:8px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem">&#x1F4E6;</div>
-            <div>
-              <div style="font-size:.8rem;font-weight:600;color:#fff">Inventory Pressure</div>
-              <div style="font-size:.72rem;color:rgba(255,255,255,.35);margin-top:.15rem">More portions = higher urgency signal</div>
+        </div>
+
+        <!-- Result (hidden initially) -->
+        <div class="flex-1 p-container-padding flex flex-col gap-stack-lg opacity-0 transition-opacity duration-500" id="aiResult" style="pointer-events:none">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter items-start">
+            <div class="space-y-2">
+              <span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Suggested Clearance Price</span>
+              <div class="font-display-metrics text-display-metrics text-primary tabular-nums tracking-tighter" id="res-price">
+                &#x20B9;0<span class="text-headline-md text-on-surface-variant font-normal">/unit</span>
+              </div>
+              <p class="text-body-md text-on-surface-variant" id="res-desc">AI-optimised based on urgency and spoilage risk.</p>
+            </div>
+            <div class="bg-surface-container-low border border-outline-variant rounded-lg p-4 space-y-3">
+              <div class="flex justify-between items-center pb-2 border-b border-outline-variant">
+                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Est. Revenue Recovery</span>
+                <span class="font-headline-md text-headline-md text-primary font-bold" id="res-rev" style="font-size:1.1rem">&#x20B9;0</span>
+              </div>
+              <div class="flex justify-between items-center text-body-md">
+                <span class="text-on-surface-variant">Discount Applied</span>
+                <span class="text-on-surface font-semibold" id="res-disc">0%</span>
+              </div>
+              <div class="flex justify-between items-center text-body-md">
+                <span class="text-on-surface-variant">CO&#x2082; Mitigation Est.</span>
+                <span class="text-primary-fixed-variant font-semibold" id="res-co2">0 kg</span>
+              </div>
             </div>
           </div>
-          <div style="display:flex;gap:.75rem;align-items:flex-start">
-            <div style="width:28px;height:28px;border-radius:8px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem">&#x1F9CA;</div>
-            <div>
-              <div style="font-size:.8rem;font-weight:600;color:#fff">Spoilage Risk</div>
-              <div style="font-size:.72rem;color:rgba(255,255,255,.35);margin-top:.15rem">Dairy/Cooked: +5–10% extra discount</div>
-            </div>
+          <div class="flex-1 flex flex-col gap-2">
+            <label class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Broadcast Copy</label>
+            <textarea id="broadcast-txt" class="w-full flex-1 bg-surface border border-outline-variant rounded-DEFAULT p-3 text-body-md font-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary resize-none min-h-[80px]"></textarea>
           </div>
-          <div style="display:flex;gap:.75rem;align-items:flex-start">
-            <div style="width:28px;height:28px;border-radius:8px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem">&#x1F3B2;</div>
-            <div>
-              <div style="font-size:.8rem;font-weight:600;color:#fff">Market Variance</div>
-              <div style="font-size:.72rem;color:rgba(255,255,255,.35);margin-top:.15rem">±4% real-time demand modelling</div>
-            </div>
+          <div class="pt-4 border-t border-outline-variant flex justify-end gap-3 mt-auto">
+            <button id="new-btn" class="px-4 py-2 border border-primary text-primary rounded-DEFAULT font-label-sm text-label-sm uppercase tracking-wider hover:bg-surface-container-low transition-colors btn-active">
+              Edit / New
+            </button>
+            <button id="publish-btn" class="bg-primary text-on-primary py-2 px-6 rounded-DEFAULT font-label-sm text-label-sm uppercase tracking-wider hover:bg-surface-tint transition-colors btn-active flex items-center gap-2 shadow-sm">
+              <span class="material-symbols-outlined text-[18px]">check_circle</span>
+              Publish &amp; Broadcast
+            </button>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- Quick links -->
-      <div class="glass-card" style="border-radius:1.25rem;padding:1.25rem">
-        <div style="font-size:.875rem;font-weight:700;color:#fff;margin-bottom:.75rem">&#x1F517; Quick Links</div>
-        <a href="/" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:.6rem .75rem;border-radius:.75rem;color:rgba(255,255,255,.45);font-size:.8125rem;text-decoration:none;transition:all .2s"
-           onmouseover="this.style.background='rgba(255,255,255,.05)';this.style.color='#10b981'"
-           onmouseout="this.style.background='';this.style.color='rgba(255,255,255,.45)'">
-          Consumer Live Feed <span style="color:#10b981">&#x2192;</span>
-        </a>
+    <!-- Analytics Strip / Sparkline -->
+    <section class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col md:flex-row items-center gap-4 justify-between">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-on-surface-variant">monitoring</span>
+        <div>
+          <h4 class="font-label-sm text-label-sm uppercase text-on-surface">Last 5 Published Discounts</h4>
+          <p class="text-label-mono text-on-surface-variant" style="font-size:.7rem">Live from session</p>
+        </div>
       </div>
+      <div class="flex-1 max-w-md w-full h-8 flex items-end gap-1" id="sparkline-strip">
+        <div class="w-1/6 h-[30%] bg-surface-container-highest rounded-t-sm"></div>
+        <div class="w-1/6 h-[50%] bg-surface-container-highest rounded-t-sm"></div>
+        <div class="w-1/6 h-[40%] bg-surface-container-highest rounded-t-sm"></div>
+        <div class="w-1/6 h-[70%] bg-primary-fixed-dim rounded-t-sm"></div>
+        <div class="w-1/6 h-[60%] bg-surface-container-highest rounded-t-sm"></div>
+      </div>
+      <div class="text-right">
+        <div class="font-headline-md text-headline-md text-primary font-bold" id="spark-latest" style="font-size:1.25rem">--</div>
+        <div class="text-label-mono text-primary-fixed-variant flex items-center justify-end gap-1" style="font-size:.7rem">
+          <span class="material-symbols-outlined text-[12px]">trending_up</span> Latest discount
+        </div>
+      </div>
+    </section>
 
-    </div><!-- /right -->
   </div>
 </main>
 
-<!-- TOAST -->
-<div id="toast" class="toast glass-card" style="border-radius:.875rem;padding:.75rem 1.25rem;display:flex;align-items:center;gap:.6rem;max-width:320px;border:1px solid rgba(16,185,129,.2)">
+<!-- Mobile Bottom Nav -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 bg-surface border-t border-outline-variant z-50 rounded-t-xl shadow-sm">
+  <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors p-2" href="/">
+    <span class="material-symbols-outlined">home</span>
+    <span class="font-label-sm text-label-sm mt-1">Home</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors p-2" href="#">
+    <span class="material-symbols-outlined">list_alt</span>
+    <span class="font-label-sm text-label-sm mt-1">Inventory</span>
+  </a>
+  <a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1" href="#">
+    <span class="material-symbols-outlined">local_offer</span>
+    <span class="font-label-sm text-label-sm mt-1">Deals</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors p-2" href="#">
+    <span class="material-symbols-outlined">bar_chart</span>
+    <span class="font-label-sm text-label-sm mt-1">Stats</span>
+  </a>
+</nav>
+
+<!-- Toast -->
+<div id="toast" class="toast bg-surface border border-outline-variant rounded-lg px-4 py-3 flex items-center gap-2 max-w-xs shadow-lg">
   <span id="toast-icon">&#x2705;</span>
-  <span id="toast-msg" style="font-size:.8125rem;color:#fff;font-weight:500"></span>
+  <span id="toast-msg" class="font-label-sm text-label-sm text-on-surface"></span>
 </div>
 
 <script src="/static/js/vendor.js"></script>
