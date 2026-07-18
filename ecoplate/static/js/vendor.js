@@ -313,26 +313,32 @@ async function loadAnalytics() {
     const totalUnits = Object.values(cats).reduce((a, v) => a + v, 0) || 1;
     document.getElementById("cat-chart").innerHTML = ["Cooked", "Dairy", "Bakery", "Produce"].map(cat => {
       const count = cats[cat] || 0;
-      const pct   = (count / maxC) * 100;
-      return `<div class="space-y-1">
-        <div class="flex justify-between text-xs text-on-surface-variant"><span>${cat}</span><span>${count} units</span></div>
-        <div class="w-full bg-surface-container rounded-full h-2">
-          <div class="bg-primary h-2 rounded-full transition-all" style="width:${pct}%"></div>
+      const pct   = Math.round((count / totalUnits) * 100);
+      return `<div style="margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
+          <span style="font-weight:600;">${catEmoji[cat]} ${cat}</span>
+          <span style="color:#717974;">${count} units &bull; ${pct}%</span>
+        </div>
+        <div style="width:100%;background:#edeeee;border-radius:99px;height:8px;">
+          <div style="width:${pct}%;background:${catColors[cat]};height:8px;border-radius:99px;transition:width 0.6s ease;"></div>
         </div>
       </div>`;
     }).join("");
 
-    // Revenue trend (last 5)
+    // ── Revenue per sale — last 5 (pixel heights) ─────────────────────────────
     const last5  = [...sales].sort((a, b) => b.published_at - a.published_at).slice(0, 5).reverse();
     const maxRev = Math.max(...last5.map(s => s.suggested_price * s.qty), 1);
-    document.getElementById("rev-chart").innerHTML = last5.map(s => {
-      const rv = s.suggested_price * s.qty;
-      const h  = Math.max(4, Math.round((rv / maxRev) * 100));
-      return `<div class="flex-1 flex flex-col items-center justify-end gap-1 h-full">
-        <span class="font-label-mono text-label-mono" style="font-size:9px;color:#b8130e">₹${Math.round(rv)}</span>
-        <div class="w-full rounded-t" style="height:${h}%;background:#b8130e" title="₹${Math.round(rv)}"></div>
-      </div>`;
-    }).join("");
+    document.getElementById("rev-chart").innerHTML = last5.length
+      ? last5.map(s => {
+          const rv = s.suggested_price * s.qty;
+          const h  = Math.max(6, Math.round((rv / maxRev) * BAR_MAX));
+          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;padding-bottom:6px;">
+            <span style="font-size:10px;font-weight:700;color:#b8130e;">&#x20B9;${Math.round(rv)}</span>
+            <div style="width:100%;background:#b8130e;height:${h}px;border-radius:5px 5px 0 0;transition:height .5s ease;" title="${esc(s.item)}: &#x20B9;${Math.round(rv)}"></div>
+            <span style="font-size:9px;color:#717974;text-align:center;overflow:hidden;max-width:100%;white-space:nowrap;text-overflow:ellipsis;">${esc(s.item.split(' ')[0])}</span>
+          </div>`;
+        }).join("")
+      : `<div style="width:100%;text-align:center;color:#717974;font-size:13px;padding:32px 0;">No sales yet</div>`;
 
   } catch (_) {}
 }
