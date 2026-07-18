@@ -1,4 +1,4 @@
-﻿// feed.js — wired to Stitch-designed feed.html
+// feed.js — wired to Stitch-designed feed.html
 
 const PERI_EMOJI = { Dairy:"🥛", Cooked:"🍲", Bakery:"🥐", Produce:"🥬" };
 
@@ -61,22 +61,39 @@ function sorted() {
   return list;
 }
 
+// ─── FOOD IMAGES per perishability ───────────────────────────────────────────
+const FOOD_IMGS = {
+  Cooked:  "/static/food_cooked.png",
+  Bakery:  "/static/food_bakery.png",
+  Produce: "/static/food_produce.png",
+  Dairy:   "/static/food_dairy.png"
+};
+
 // ─── CARD ─────────────────────────────────────────────────────────────────────
 function buildCard(s) {
   const now     = Date.now() / 1000;
   const expired = s.expires_at < now;
   const discRnd = Math.round(s.discount_pct);
+  const imgSrc  = FOOD_IMGS[s.perishability] || FOOD_IMGS.Cooked;
+  const emoji   = PERI_EMOJI[s.perishability] || "🍽️";
 
   return `
 <article class="bg-[#1e293b] border border-outline/20 rounded-xl overflow-hidden shadow-sm relative${expired ? " opacity-50" : ""}" id="card-${s.id}">
-  <div class="h-32 bg-gray-800 relative w-full flex items-center justify-center">
-    <span class="material-symbols-outlined text-[64px] text-gray-600">${iconFor(s.perishability)}</span>
+  <div class="h-40 relative w-full overflow-hidden">
+    <img src="${imgSrc}" alt="${esc(s.item)}"
+      class="w-full h-full object-cover"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+    <div class="absolute inset-0 bg-gray-800 items-center justify-center hidden">
+      <span class="text-5xl">${emoji}</span>
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a]/80 via-transparent to-transparent"></div>
     <div class="absolute top-2 left-2 bg-secondary text-on-secondary font-label-sm text-label-sm px-2 py-1 rounded shadow-sm font-bold flex items-center gap-1">
       <span class="material-symbols-outlined text-[14px]">local_fire_department</span>
       ${discRnd}% OFF
     </div>
-    ${expired ? `<div class="absolute inset-0 bg-black/50 flex items-center justify-center">
-      <span class="font-label-mono text-label-mono text-white uppercase tracking-widest">Expired</span>
+    <div class="absolute top-2 right-2 bg-[#1e293b]/80 backdrop-blur-sm text-surface-variant font-label-mono text-label-mono px-2 py-0.5 rounded text-[10px] uppercase">${s.perishability}</div>
+    ${expired ? `<div class="absolute inset-0 bg-black/60 flex items-center justify-center">
+      <span class="font-label-mono text-label-mono text-white uppercase tracking-widest bg-black/50 px-4 py-2 rounded">Expired</span>
     </div>` : ""}
   </div>
   <div class="p-4">
@@ -121,6 +138,8 @@ function buildCard(s) {
     </button>
   </div>
 </article>`;
+}
+
 }
 
 function iconFor(peri) {
